@@ -7,7 +7,22 @@ app.use('/auth', auth);
 
 app.get('/', function (req, res) {
     res.render('../pages/qa/qa_home.ejs', { title: 'Home' })
+});
+
+
+app.get('/posts/:id?(\d+)', function (req, res) {
+
+});
+
+app.post('/posts', function (req, res) {
+
 })
+
+app.patch('/posts/:id(\d+)', function (req, res) {
+
+})
+
+
 
 
 app.get('/signup', function (req, res) {
