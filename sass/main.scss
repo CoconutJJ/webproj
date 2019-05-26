@@ -1,0 +1,47 @@
+@import 'definitions';
+
+nav {
+    ul {
+        margin: 0 0 10px 0;
+        padding: 0;
+
+        li {
+            display: inline-block;
+            a {
+                text-decoration: none;
+                color: #4885ed;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+// input[type="text"], input[type="password"], textarea {
+//     border: 1px solid black;
+//     padding: 5px;
+//     font-family: 'Consolas', monospace;
+//     font-size: 12pt;
+//     resize: vertical;
+// }
+
+// input[type="text"]:focus, input[type="password"]:focus, textarea {
+//     outline: none;
+// }
+
+// input[type="button"] {
+//     background-color: transparent;
+//     border: 1px solid black;
+//     outline: none;
+//     border-style: solid;
+//     padding: 5px;
+//     cursor: pointer;
+//     font-family: 'Consolas', monospace;
+//     font-size: 12pt;
+// }
+
+// input[type="button"]:active {
+//     background-color: grey;
+
+// }

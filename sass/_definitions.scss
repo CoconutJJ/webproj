@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css?family=Arvo|Roboto');
+$MARGIN: 5%;
+
+html{
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+
+h1,h2,h3 {
+    font-family: 'Arvo', sans-serif;
+}
+
+code {
+    font-family: 'Consolas', monospace, sans-serif
+}
+body {
+    margin-left: $MARGIN;
+    margin-right: $MARGIN;
+    margin-top: 5%;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, textarea:focus{
+    outline: none;
+    border: 2px solid #4885ed;
+    
+}
+
+input[type="text"], input[type="password"], input[type="email"], textarea {
+    background-color: #ffffff;
+    transition: border 0.2s ease-in;
+    padding: 5px 5px;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    background-color: #ffffff;
+    transition: border 0.2s ease-in;
+    padding: 5px 5px;
+}

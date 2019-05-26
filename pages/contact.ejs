@@ -1,0 +1,35 @@
+<html>
+
+<head>
+    <title>David Yue</title>
+    <%- include('./header.ejs') %>
+    <script src="/js/contact.min.js"></script>
+</head>
+
+<body>
+    <h1>Contact</h1>
+    <%- 
+    include('./nav.ejs') 
+    %>
+
+    <form id="contact-form">
+        <div class="form-row">
+            <div class="col">
+                <input type="text" id="first-name" class="form-control" placeholder="First Name">
+            </div>
+            <div class="col">
+                <input type="text" id="last-name" class="form-control" placeholder="Last Name">
+            </div>
+        </div>
+        <br>
+        <input type="text" id="email" class="form-control" placeholder="Email">
+        <br>
+        
+        <textarea class="form-control" rows=10 cols=70 id="body" placeholder="Your message..."></textarea>
+        <br>
+        <input type="button" class="btn btn-primary" id="send" value="Send">
+    </form>
+
+</body>
+
+</html>

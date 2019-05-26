@@ -1,0 +1,13 @@
+<nav>
+    
+    <ul>
+        <li><a href="/qa">Home</a></li>
+        <% if (!site.loggedIn) { %>
+        <li><a href="/qa/login">Login</a></li>
+        <li><a href="/qa/signup">Sign Up</a></li>
+        <% } else { %>
+        <li><a href="/qa/logout">Log Out</a></li>
+        <% } %>
+    </ul>
+
+</nav>

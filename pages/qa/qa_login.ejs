@@ -1,0 +1,30 @@
+<html>
+
+<head>
+    <%- include('qa_header.ejs') %>
+</head>
+
+<body>
+    <script src="/js/login.min.js"></script>
+    <div id="big-wrap">
+    <%- include('qa_nav.ejs') %>
+    <h1>Login</h1>
+    <p>
+        Please enter your login information in the form below.
+    </p>
+    <form class="form">
+        <input type="text" class="form-control" id="username" placeholder="Username">
+        <input type="password" class="form-control" id="password" placeholder="Password"><br>
+        <input type="button" id="submit-btn" value="Login">
+    </form>
+
+    <p>
+        If you do not have an account. <a href="/qa/signup">Create one.</a>
+    </p>
+    <small>
+        Please note that all information provided by you or your browser may be collected and tracked. You will <b>not</b> be notified of any changes to this data collection policy. Any use of this site is your consent on this policy.
+    </small>
+    </div>
+</body>
+
+</html>
