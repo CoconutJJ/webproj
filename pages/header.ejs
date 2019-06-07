@@ -3,3 +3,14 @@
 <link href="/css/main.css" type="text/css" rel="stylesheet">
 <script src="/lib/jquery/jquery-3.3.1.min.js"></script>
 <!-- <script src="/lib/bootstrap/js/bootstrap.js"></script> -->
+<% if (site.env === 'development') { %>
+<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+<% } else { %>
+<script src="https://unpkg.com/react@16/umd/react.production.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.js" crossorigin></script>
+
+<% } %>
+
+<script src="https://requirejs.org/docs/release/2.3.6/minified/require.js" crossorigin></script>

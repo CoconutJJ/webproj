@@ -24,3 +24,14 @@ export interface Analytics {
     native_os: string,
     user_agent: string
 }
+
+export interface PostsModel {
+
+  id: number,
+  title: string,
+  subtitle: string,
+  body: string,
+  author: string,
+  created_at: string,
+  updated_at: string
+}

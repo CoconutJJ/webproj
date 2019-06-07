@@ -53,8 +53,8 @@ app.use(function (req, res, next) {
 
     site: {
       loggedIn: req['currentUser'].isLoggedIn(),
-      user: req.session['user']
-
+      user: req.session['user'],
+      env: app.get('env')
     },
 
   };
@@ -83,6 +83,8 @@ app.use('/qa', qa);
 
 app.use('/form', form);
 
+
+app.use('/react_assets', express.static('react_components'));
 
 app.get('/', function (req, res) {
   res.render('../pages/index.ejs');

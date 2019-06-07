@@ -10,7 +10,16 @@ app.get('/', function (req, res) {
 });
 
 
-app.get('/posts/:id?(\d+)', function (req, res) {
+app.get('/posts/:id(\d+)?', function (req, res) {
+    if (!req['currentUser'].isLoggedIn()) {
+        res.redirect('/qa/login');
+    } else {
+        
+        
+
+
+
+    }
 
 });
 

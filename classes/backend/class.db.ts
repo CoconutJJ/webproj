@@ -37,7 +37,7 @@ export class db implements DatabaseConnectionManager {
    * @param values Query Values
    * @returns {Promise<any>}
    */
-  public query(sql: string, values: any[]): Promise<any> {
+  public query(sql: string, values: any[]): Promise<Array<object>> {
     return new Promise(function(resolve, reject) {
       // attempt to get a connection
       db.sql.getConnection(function(
@@ -63,6 +63,13 @@ export class db implements DatabaseConnectionManager {
     });
   }
   
+  public exists(sql, values: any[]): Promise<void> {
+
+    return this.query(sql, values).then(function (rows)  {
+      return rows.length > 0 ? Promise.resolve() : Promise.reject();
+    })
+
+  }
 
   /**
    * Get a list of column names

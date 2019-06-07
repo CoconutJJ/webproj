@@ -1,0 +1,10 @@
+///<reference path="./app.tsx"/>
+
+/**
+ * App Name
+ * 
+ * @author <YOUR NAME>
+ * @description <App description>
+ */
+var appContainer = document.getElementById('DOM CONTAINER ID HERE');
+ReactDOM.render(<App />, appContainer);
