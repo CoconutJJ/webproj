@@ -13,7 +13,7 @@ buildJS() {
     echo "Building $1 -> $exportdir/$fname.min.js"
     
     npx tsc $1 -m commonjs 
-    npx browserify $file_path/$fname.js | npx google-closure-compiler --compilation_level ADVANCED --js_output_file "$exportdir/$fname.min.js" 2>&1 > .setup/last_build.log
+    npx browserify $file_path/$fname.js | npx google-closure-compiler --warning_level QUIET --compilation_level ADVANCED --js_output_file "$exportdir/$fname.min.js" 2>&1 > .setup/last_build.log
 }
 
 buildCSS() {
