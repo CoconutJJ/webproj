@@ -1,5 +1,5 @@
 import * as mysql from 'mysql';
-import * as interf from '../../interfaces/interface.db';
+import { DatabaseMetaInfo } from '../../interfaces/interface.db';
 
 export interface DatabaseConnectionManager {
   query(sql: string, values: string[]): Promise<any>;
@@ -63,11 +63,10 @@ export class db implements DatabaseConnectionManager {
     });
   }
   
-  public exists(sql, values: any[]): Promise<void> {
+  public async exists(sql: string, values: any[]): Promise<void> {
 
-    return this.query(sql, values).then(function (rows)  {
-      return rows.length > 0 ? Promise.resolve() : Promise.reject();
-    })
+    const rows = await this.query(sql, values);
+    return rows.length > 0 ? Promise.resolve() : Promise.reject();
 
   }
 
@@ -76,16 +75,14 @@ export class db implements DatabaseConnectionManager {
    * @param tableName Name of table
    * @returns {Promise<string[]>}
    */
-  public getColumns(tableName: string): Promise<string[]> {
-    return this.query("SHOW COLUMNS FROM ?", [tableName]).then(function(rows: Array<interf.DatabaseMetaInfo>) {
-      var columns: string[] = [];
-
-      for (var i = 0; i < rows.length; i++) {
-        columns.push(rows[i].Field);
-      }
-
-      return columns;
-    });
+  public async getColumns(tableName: string): Promise<string[]> {
+    let rows = await this.query("SHOW COLUMNS FROM ?", [tableName]);
+    
+    var columns: string[] = [];
+    for (var i = 0; i < rows.length; i++) {
+      columns.push((<DatabaseMetaInfo>rows[i]).Field);
+    }
+    return columns;
   }
 
   

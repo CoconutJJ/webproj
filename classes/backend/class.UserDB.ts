@@ -1,12 +1,12 @@
-import * as db from './class.db';
-import * as acc from '../qa/class.Account';
-import * as accbuilder from '../qa/class.AccountBuilder';
+import { db } from './class.db';
+import { Account } from '../qa/class.Account';
+import { AccountBuilder } from '../qa/class.AccountBuilder';
 class UserDB {
 
-    private dbh: db.db;
+    private dbh: db;
 
     constructor() {
-        this.dbh = new db.db();
+        this.dbh = new db();
     }
 
     private async getUserAccountByProperty(property: string, value: string) {
@@ -14,13 +14,13 @@ class UserDB {
             let rows = await this.dbh
                 .query('SELECT * FROM users WHERE ' + property + ' = ?', [value]);
             if (rows.length == 1) {
-                rows = rows[0];
-                var accountBuilder = new accbuilder.AccountBuilder();
-                var account: acc.Account = accountBuilder.firstName(rows['firstname'])
-                    .lastName(rows['lastname'])
-                    .userName(rows['username'])
-                    .password(rows['password'])
-                    .email(rows['email'])
+                let currRow: {} = rows[0];
+                var accountBuilder = new AccountBuilder();
+                var account: Account = accountBuilder.firstName(rows['firstname'])
+                    .lastName(currRow['lastname'])
+                    .userName(currRow['username'])
+                    .password(currRow['password'])
+                    .email(currRow['email'])
                     .create();
                 return account;
             }
@@ -33,11 +33,11 @@ class UserDB {
         }
     }
 
-    public getUserAccountById(id: string): Promise<acc.Account> {
+    public getUserAccountById(id: string): Promise<Account> {
         return this.getUserAccountByProperty('id', id);
     }
 
-    public getUserAccountByUsername(username: string): Promise<acc.Account> {
+    public getUserAccountByUsername(username: string): Promise<Account> {
         return this.getUserAccountByProperty('username', username);
     }
 }

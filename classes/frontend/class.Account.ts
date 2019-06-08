@@ -1,4 +1,5 @@
 import HTTPRequest from './class.HTTPRequest';
+import { HTTP } from '../class.definitions';
 
 class Account {
 
@@ -59,7 +60,7 @@ class Account {
             "uname": username,
             "pword": password,
 
-        }, HTTPRequest.RESPONSE.ACCEPTED);
+        }, HTTP.RESPONSE.ACCEPTED);
     }
 
     /**
@@ -92,7 +93,7 @@ class Account {
                 "username": username,
                 "password": password,
                 "email": email
-            }, HTTPRequest.RESPONSE.CREATED);
+            }, HTTP.RESPONSE.CREATED);
         }
     }
 
@@ -122,7 +123,7 @@ class Account {
 
         let req = new HTTPRequest("GET", '/qa/login/info');
 
-        return req.execVoid(HTTPRequest.RESPONSE.OK);
+        return req.execVoid(HTTP.RESPONSE.OK);
 
     }
 

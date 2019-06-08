@@ -1,6 +1,8 @@
 import * as express from 'express';
-import * as login from '../classes/backend/class.Login';
+import { Login } from '../classes/backend/class.Login';
 import * as auth from './auth';
+import { HTTP } from '../classes/class.definitions';
+
 const app = express.Router();
 
 app.use('/auth', auth);
@@ -14,11 +16,8 @@ app.get('/posts/:id(\d+)?', function (req, res) {
     if (!req['currentUser'].isLoggedIn()) {
         res.redirect('/qa/login');
     } else {
+
         
-        
-
-
-
     }
 
 });
@@ -44,7 +43,7 @@ app.get('/signup', function (req, res) {
 
 
 app.post('/signup', function (req, res) {
-    login.Login.createUser({
+    Login.createUser({
         firstname: req.body['firstname'],
         lastname: req.body['lastname'],
         email: req.body['email'],
@@ -53,23 +52,23 @@ app.post('/signup', function (req, res) {
     }).then(function (success) {
 
         if (success) {
-            res.status(201).send(JSON.stringify({
+            res.status(HTTP.RESPONSE.ACCEPTED).send(JSON.stringify({
                 'code': 'ACCOUNT_CREATED',
                 'msg': 'Account has been successfully created',
                 'redirect': '/qa/home'
             }))
         } else {
-            res.status(409).send(JSON.stringify({
+            res.status(HTTP.RESPONSE.CONFLICT).send(JSON.stringify({
                 'code': 'ACCOUNT_EXISTS',
                 'msg': 'Username or Email already exists'
             }))
         }
 
-    }).catch(function(){
-        res.status(500).send(JSON.stringify({
+    }).catch(function () {
+        res.status(HTTP.RESPONSE.INTERNAL_SERVER_ERROR).send(JSON.stringify({
             'code': "SIGNUP_INTERNAL_ERROR",
             'msg': 'Failed to create account'
-        }))
+        }));
     })
 });
 
@@ -77,15 +76,15 @@ app.post('/login', function (req, res) {
     var username = req.body['uname'];
     var password = req.body['pword'];
 
-    login.Login.login(username, password)
+    Login.login(username, password)
         .then(function (success) {
             // console.log(success);
             if (success) {
                 // start the session if the password matches
-                return login.Login.startSession(username, req.session);
+                return Login.startSession(username, req.session);
 
             } else {
-                res.status(401).send(JSON.stringify({
+                res.status(HTTP.RESPONSE.UNAUTHORIZED).send(JSON.stringify({
                     'code': 'LOGIN_FAILED',
                     'msg': 'Incorrect Username / Password'
                 }));
@@ -93,20 +92,20 @@ app.post('/login', function (req, res) {
             res.end();
         }).then(function (success) {
             if (success) {
-                res.status(202).send(JSON.stringify({
+                res.status(HTTP.RESPONSE.ACCEPTED).send(JSON.stringify({
                     'code': 'LOGIN_SUCCESS',
                     'msg': 'Login Successful',
                     'redirect': '/qa'
                 }));
             } else {
-                res.status(500).send({
+                res.status(HTTP.RESPONSE.INTERNAL_SERVER_ERROR).send({
                     'code': 'LOGIN_INTERNAL_ERROR',
                     'msg': 'Could not initialize user session.'
                 });
             }
         })
         .catch(function (err) {
-            res.status(500).send({
+            res.status(HTTP.RESPONSE.INTERNAL_SERVER_ERROR).send({
                 'code': 'LOGIN_INTERNAL_ERROR',
                 'msg': 'Something went wrong. Try again later'
             });
@@ -119,7 +118,7 @@ app.get('/login', function (req, res) {
     if (typeof req.session['loggedIn'] == 'undefined' || req.session['loggedIn'] == false) {
         res.render('../pages/qa/qa_login.ejs', { title: 'Login' })
     } else {
-        res.redirect(302, '/')
+        res.redirect(HTTP.RESPONSE.FOUND, '/')
     }
 })
 
@@ -136,10 +135,10 @@ app.get('/login/info', function (req, res) {
             }));
         } else {
             res.redirect('/404');
-            
+
         }
     } else {
-        res.status(503).send(JSON.stringify({
+        res.status(HTTP.RESPONSE.SERVICE_UNAVAILABLE).send(JSON.stringify({
             'code': 'INVALID_SESSION',
             'msg': 'The user is not logged in.'
         }));

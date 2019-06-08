@@ -1,5 +1,6 @@
 import HTTPRequest from '../classes/frontend/class.HTTPRequest';
 import DataSanityCheck from '../classes/frontend/class.DataSanityCheck';
+import { HTTP } from '../classes/class.definitions';
 
 document.addEventListener('DOMContentLoaded', function () {
   let send_btn: HTMLInputElement =
@@ -37,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
           'body': body.value
 
         },
-        HTTPRequest.RESPONSE.CREATED)
+        HTTP.RESPONSE.CREATED)
         .then(function (data) {
           // check if message was sent successfully
           if (data['success']) {

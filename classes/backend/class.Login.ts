@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import * as interf from '../../interfaces/interface.db'
+import { User } from '../../interfaces/interface.db'
 import * as db from './class.db'
 
 
@@ -30,7 +30,7 @@ export class Login {
    * Rejects  Error if creation process failed unexpectedly.
    * @param userInfo User information object
    */
-  public static async createUser(userInfo: interf.User): Promise<boolean> {
+  public static async createUser(userInfo: User): Promise<boolean> {
 
     // generate the hashed password
     let hashedPassword =
@@ -43,10 +43,10 @@ export class Login {
 
       // check there are zero matching records
       if (chk.length > 0) {
-        
+
         return false;
       } else {
-        
+
         const row = await this.database.query(
           'INSERT INTO users (firstname, lastname, username, password, email) VALUES (?, ?, ?, ?, ?)',
           [
@@ -79,7 +79,7 @@ export class Login {
           session.destroy(function (err) {
             session.regenerate(function (err) {
 
-              session['user'] = <interf.User>{
+              session['user'] = <User>{
                 'firstname': rows[0]['firstname'],
                 'lastname': rows[0]['lastname'],
                 'username': rows[0]['username'],
@@ -89,7 +89,7 @@ export class Login {
             })
           })
         } else {
-          session['user'] = <interf.User>{
+          session['user'] = <User>{
             'firstname': rows[0]['firstname'],
             'lastname': rows[0]['lastname'],
             'username': rows[0]['username'],

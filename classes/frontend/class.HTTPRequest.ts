@@ -1,13 +1,6 @@
+import {HTTP} from '../class.definitions';
 class HTTPRequest {
-    public static RESPONSE = {
-        OK: 200,
-        CREATED: 201,
-        ACCEPTED: 202,
-        CONFLICT: 409,
-        SERVICE_UNAVAILABLE: 503
-
-    }
-
+    
 
     private xhttp: XMLHttpRequest;
     private url: string;
@@ -92,7 +85,7 @@ class HTTPRequest {
                 // status is returned
                 if (req.readyState == XMLHttpRequest.DONE &&
                     req.status ==
-                    ((requireStatus == null) ? HTTPRequest.RESPONSE.OK :
+                    ((requireStatus == null) ? HTTP.RESPONSE.OK :
                         requireStatus)) {
                     
                     resolve(JSON.parse(req.responseText));
