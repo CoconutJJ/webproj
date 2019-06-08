@@ -34,3 +34,5 @@ class FileIO {
     }
     
 }
+
+export default FileIO;

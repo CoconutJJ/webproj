@@ -23,3 +23,5 @@ class DataSanityCheck {
 
 
 }
+
+export default DataSanityCheck;

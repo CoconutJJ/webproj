@@ -1,6 +1,4 @@
-/// <reference path="../classes/frontend/class.Account.ts"/>
-(function(document, window) {
-
+import Account from '../classes/frontend/class.Account';
 
 function login() {
   let username_input: HTMLInputElement =
@@ -46,4 +44,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   })
 })
-})(document, window);

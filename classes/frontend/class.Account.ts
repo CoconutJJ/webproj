@@ -1,4 +1,4 @@
-/// <reference path="./class.HTTPRequest.ts"/>
+import HTTPRequest from './class.HTTPRequest';
 
 class Account {
 
@@ -127,3 +127,4 @@ class Account {
     }
 
 }
+export default Account;

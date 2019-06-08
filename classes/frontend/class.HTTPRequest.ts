@@ -161,3 +161,5 @@ class HTTPRequest {
         return this.exec(JSON.stringify(DATA), requireStatus);
     }
 }
+
+export default HTTPRequest;

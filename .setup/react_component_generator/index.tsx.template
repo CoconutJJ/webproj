@@ -1,5 +1,6 @@
-///<reference path="./app.tsx"/>
-
+import * as App from './app';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 /**
  * App Name
  * 
@@ -7,4 +8,4 @@
  * @description <App description>
  */
 var appContainer = document.getElementById('DOM CONTAINER ID HERE');
-ReactDOM.render(<App />, appContainer);
+ReactDOM.render(<App.App />, appContainer);

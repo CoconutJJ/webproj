@@ -8,9 +8,12 @@ buildJS() {
 
     exportdir='build/js'
     
+    file_path=`dirname $1`
+
     echo "Building $1 -> $exportdir/$fname.min.js"
     
-    npx tsc $1 --out /dev/stdout | npx google-closure-compiler --compilation_level ADVANCED --js_output_file "$exportdir/$fname.min.js" > /dev/null
+    npx tsc $1 -m commonjs 
+    npx browserify $file_path/$fname.js | npx google-closure-compiler --compilation_level ADVANCED --js_output_file "$exportdir/$fname.min.js" 2>&1 > .setup/last_build.log
 }
 
 buildCSS() {

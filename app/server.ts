@@ -83,7 +83,9 @@ app.use('/qa', qa);
 
 app.use('/form', form);
 
-
+/**
+  All React Component assets are mounted on this static route.
+*/
 app.use('/react_assets', express.static('react_components'));
 
 app.get('/', function (req, res) {

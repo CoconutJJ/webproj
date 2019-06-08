@@ -16,6 +16,7 @@
     "@types/react": "^16.8.19",
     "@types/react-dom": "^16.8.4",
     "bcrypt": "^3.0.6",
+    "browserify": "^16.2.3",
     "chai": "^4.2.0",
     "ejs": "^2.6.1",
     "express": "^4.17.0",
@@ -36,7 +37,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "react:build:test_app": "npx tsc react_components/test_app/src/index.tsx --jsx react --out react_components/test_app/build/index.js"
+    "react:build:test_app": "npx tsc react_components/test_app/src/index.tsx --jsx react; browserify react_components/test_app/src/index.js > react_components/test_app/build/index.js"
   },
   "repository": {
     "type": "git",

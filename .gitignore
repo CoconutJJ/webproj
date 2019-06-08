@@ -2,3 +2,8 @@ node_modules/
 build/
 .idea/
 .vscode/
+react_components/*/build/*.js
+react_components/*/src/*.js
+
+js/*.js
+classes/frontend/*.js
