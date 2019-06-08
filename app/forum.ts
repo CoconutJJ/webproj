@@ -16,7 +16,7 @@ app.get('/posts/:id(\d+)?', function (req, res) {
     if (!req['currentUser'].isLoggedIn()) {
         res.redirect('/qa/login');
     } else {
-
+        
         
     }
 
@@ -30,7 +30,9 @@ app.patch('/posts/:id(\d+)', function (req, res) {
 
 })
 
-
+app.get('/posts/create', function (req, res) {
+    res.render('../pages/qa/qa_create_post.ejs', {title: 'Create Post'});
+})
 
 
 app.get('/signup', function (req, res) {
@@ -147,7 +149,7 @@ app.get('/login/info', function (req, res) {
 
 app.get('/logout', function (req, res) {
     req.session.destroy(function () {
-        res.redirect(302, '/qa/login');
+        res.redirect(HTTP.RESPONSE.FOUND, '/qa/login');
     });
 })
 

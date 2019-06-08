@@ -102,6 +102,11 @@ export class Login {
       })
   }
 
+  /**
+   * Verifies that `clearPassword` is hashed to `hashedPassword`
+   * @param clearPassword 
+   * @param hashedPassword 
+   */
   private static _verifyPassword(clearPassword: string, hashedPassword: string):
     boolean {
     return bcrypt.compareSync(clearPassword, hashedPassword)

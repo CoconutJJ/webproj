@@ -6,14 +6,22 @@ buildJS() {
 
     fname=`echo $fname_ext | cut -d'.' -f1`
 
-    exportdir='build/js'
+    
     
     file_path=`dirname $1`
+    exportdir="build/$file_path"
 
     echo "Building $1 -> $exportdir/$fname.min.js"
     
     npx tsc $1 -m commonjs 
-    npx browserify $file_path/$fname.js | npx google-closure-compiler --warning_level QUIET --compilation_level ADVANCED --js_output_file "$exportdir/$fname.min.js" 2>&1 > .setup/last_build.log
+    # npx browserify $file_path/$fname.js | npx google-closure-compiler --warning_level QUIET --compilation_level SIMPLE --js_output_file "$exportdir/$fname.min.js" 2>&1 > .setup/last_build.log
+
+    if ! [ -d $exportdir ]; then
+        mkdir -p $exportdir
+    fi
+
+
+    npx browserify $file_path/$fname.js > $exportdir/$fname.min.js 
 }
 
 buildCSS() {
@@ -54,6 +62,7 @@ makeClientFiles() {
     buildJS js/login.ts
     buildJS js/contact.ts
     buildJS js/signup.ts
+    buildJS js/posts/create_post.ts
 }
 
 

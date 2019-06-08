@@ -1,11 +1,11 @@
 import * as express from 'express';
-import * as db from '../classes/backend/class.db';
+import {db} from '../classes/backend/class.db';
 const app = express.Router();
 
 app.get('/valid', function (req, res) {
 
 
-    let database = new db.db();
+    let database = new db();
     let response = {};
     let workers = [];
 
@@ -24,8 +24,6 @@ app.get('/valid', function (req, res) {
 
                 });
                 
-                
-
                 workers.push(op);
                 break;
             default:
