@@ -112,42 +112,11 @@ app.get('/404', function (req, res) {
   res.send("<h1>404</h1><p>Page not found.</p>");
 });
 
-app.get('/css/:fn', function (req, res) {
-  res.header('Content-Type', 'text/css');
+app.use('/css', express.static('build/css'));
 
-  var requestPath: string = path.resolve(__dirname + '/../css/' + req.params.fn);
+app.use('/js',express.static('build/js'));
 
-
-  if (requestPath.indexOf("/css") !== -1) {
-    res.sendFile(requestPath);
-  } else {
-    res.redirect('/');
-  }
-
-});
-
-app.get('/js/:fn', function (req, res) {
-  res.header('Content-Type', 'text/javascript');
-
-  let requestPath: string = path.resolve(__dirname + '/../js/' + req.params.fn);
-
-  if (requestPath.indexOf("/js") !== -1) {
-    res.sendFile(requestPath);
-  } else {
-    res.redirect('/');
-  }
-
-});
-
-app.get('/lib/:fn([a-zA-Z0-9\/\\-\\.]+)', function (req, res) {
-  let requestPath: string = path.resolve(__dirname + '/../../lib/' + req.params.fn);
-
-  if (requestPath.indexOf("/lib") !== -1) {
-    res.sendFile(requestPath);
-  } else {
-    res.redirect('/');
-  }
-});
+app.use('/lib', express.static('lib'));
 
 app.use(function (req, res, next) {
   res.redirect('/404');

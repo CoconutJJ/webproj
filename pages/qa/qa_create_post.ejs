@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('qa_header.ejs') %>
+    <script src="/js/posts/create_post.min.js"></script>
+</head>
+
+<body>
+    <div id="big-wrap">
+        <%- include("qa_nav.ejs") %>
+        <h1>Create Post</h1>
+        <form>
+            <input type="text" placeholder="Title" style="width: 75%; font-size: 18pt;">
+            <br><br>
+            <textarea id="post_editor"></textarea>
+            <input type="button" value="Submit"/>
+        </form>
+    </div>
+</body>
+
+</html>

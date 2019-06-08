@@ -32,7 +32,6 @@ export class App extends React.Component {
                 <button onClick={this.toggleText}>Change</button>
             </div>
         );
-
     }
 
 

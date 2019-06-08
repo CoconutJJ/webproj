@@ -16,6 +16,7 @@
     "@types/nodemailer": "^4.6.8",
     "@types/react": "^16.8.19",
     "@types/react-dom": "^16.8.4",
+    "@types/tinymce": "^4.5.22",
     "bcrypt": "^3.0.6",
     "browserify": "^16.2.3",
     "chai": "^4.2.0",
@@ -32,6 +33,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "sass": "^1.21.0",
+    "tinymce": "^5.0.7",
     "ts-mocha": "^6.0.0",
     "ts-node": "^8.2.0",
     "typescript": "^3.5.1"
