@@ -5,26 +5,15 @@
 </head>
 
 <body>
-    <script src="/js/signup.min.js"></script>
-    <div id="big-wrap">
-        <%- include('qa_nav.ejs') %>
+    <!-- <script src="/js/signup.min.js"></script> -->
+    <%- include('qa_nav.ejs') %>
+    <div class="container">
+        
         <h1>Sign Up</h1>
         <p>
             Please read the information below before signing up for an account.
         </p>
-        <div>
-            <form class="form">
-                <input type="text" id="firstname" placeholder="First Name" autocomplete="off">
-                <input type="text" id="lastname" placeholder="Last Name" autocomplete="off"><br><br>
-                <input type="text" id="username" class="form-control" placeholder="Username" autocomplete="off">
-                <input type="password" id="password" class="form-control" placeholder="Password" autocomplete="new-password"><br><br>
-                <input type="email" id="email" class="form-control" placeholder="Email" autocomplete="off">
-                <input type="button" id="submit" value="Create Account">
-            </form>
-            <p>
-                Already have an account? <a href="/qa/login">Login.</a>
-            </p>
-        </div>
+        <div id="signup_form"></div>
         <div>
             <h3>How to choose a good password</h3>
             <p>
@@ -37,6 +26,8 @@
             </p>
         </div>
     </div>
+    <script src="/react_assets/signup_form/build/index.js"></script>
+
 </body>
 
 </html>

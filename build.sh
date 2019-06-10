@@ -59,10 +59,9 @@ makeClientFiles() {
     # SCSS 
     buildCSS sass/main.scss
     buildCSS sass/qa_layout.scss
-    buildJS js/login.ts
     buildJS js/contact.ts
-    buildJS js/signup.ts
     buildJS js/posts/create_post.ts
+    buildJS js/index.ts
 }
 
 

@@ -2,10 +2,19 @@ import * as express from 'express';
 import { Login } from '../classes/backend/class.Login';
 import * as auth from './auth';
 import { HTTP } from '../classes/class.definitions';
-
+import { CurrentUser } from '../classes/backend/class.CurrentUser';
+import { Posts } from '../classes/backend/class.Posts';
 const app = express.Router();
 
+var currUser: CurrentUser;
+
+
 app.use('/auth', auth);
+
+app.use(function(req, res, next) {
+    currUser = req['currentUser'];
+    next();
+})
 
 app.get('/', function (req, res) {
     res.render('../pages/qa/qa_home.ejs', { title: 'Home' })
@@ -16,14 +25,29 @@ app.get('/posts/:id(\d+)?', function (req, res) {
     if (!req['currentUser'].isLoggedIn()) {
         res.redirect('/qa/login');
     } else {
-        
-        
+        Posts.allPosts().then(function(posts) {
+            for (let i = 0; i < posts.length; i++) {
+                posts[i].toJSON()
+            }
+        })
+
     }
 
 });
 
 app.post('/posts', function (req, res) {
 
+    var post = Posts.createPost({
+        title: req.body['title'],
+        author: currUser.getUserName(),
+        body: req.body['body'],
+        created_at: Date.now().toString(),
+        updated_at: Date.now().toString()
+    });
+
+    
+
+    
 })
 
 app.patch('/posts/:id(\d+)', function (req, res) {
@@ -31,7 +55,12 @@ app.patch('/posts/:id(\d+)', function (req, res) {
 })
 
 app.get('/posts/create', function (req, res) {
-    res.render('../pages/qa/qa_create_post.ejs', {title: 'Create Post'});
+
+    if (req['currentUser'].isLoggedIn()) {
+        res.render('../pages/qa/qa_create_post.ejs', { title: 'Create Post' });
+    } else {
+        res.redirect('/qa/login');
+    }
 })
 
 
@@ -91,7 +120,7 @@ app.post('/login', function (req, res) {
                     'msg': 'Incorrect Username / Password'
                 }));
             }
-            res.end();
+            
         }).then(function (success) {
             if (success) {
                 res.status(HTTP.RESPONSE.ACCEPTED).send(JSON.stringify({

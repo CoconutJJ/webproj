@@ -37,7 +37,7 @@ export class db implements DatabaseConnectionManager {
    * @param values Query Values
    * @returns {Promise<any>}
    */
-  public query(sql: string, values: any[]): Promise<Array<object>> {
+  public query<T = object>(sql: string, values: any[]): Promise<Array<T>> {
     return new Promise(function(resolve, reject) {
       // attempt to get a connection
       db.sql.getConnection(function(
