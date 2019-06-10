@@ -7,16 +7,23 @@
 </head>
 
 <body>
-    <div id="big-wrap">
-        <%- include("qa_nav.ejs") %>
+    <%- include("qa_nav.ejs") %>
+    <div class="container">
         <h1>Create Post</h1>
-        <form>
+        <p></p>
+        <div>
             <input type="text" placeholder="Title" style="width: 75%; font-size: 18pt;">
             <br><br>
-            <textarea id="post_editor"></textarea>
-            <input type="button" value="Submit"/>
+            <textarea id="post_editor"></textarea><br>
+
+
+            <button type="button" class="btn waves-effect green"><i class="material-icons left">arrow_forward</i>Submit</button>
+            <br><br>
+            <div id="post_config_form"></div>
         </form>
     </div>
+    <script src="/react_assets/post_config_form/build/index.js"></script>
+
 </body>
 
 </html>

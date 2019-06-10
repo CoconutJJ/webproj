@@ -7,30 +7,27 @@
 </head>
 
 <body>
-    <h1>TA Courses</h1>
     <%- 
     include('./nav.ejs') 
     %>
+    <div class="container">
+        <h1>TA Courses</h1>
+        <table>
+            <tr>
+                <th>Course</th>
+                <th>Resources</th>
+            </tr>
+            <tr>
+                <td>CSC C69 Operating Systems</td>
+                <td>
+                    <ul>
+                        <li>Lecture Slides</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
 
-    <table>
-        <tr>
-            <th>Course</th>
-            <th>Resources</th>
-        </tr>
-        <tr>
-            <td>CSC C69 Operating Systems</td>
-            <td>
-                <ul>
-                    <li>Lecture Slides</li>
-
-                </ul>
-
-
-            </td>
-        </tr>
-
-    </table>
-    
 </body>
 
 </html>

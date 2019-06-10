@@ -7,10 +7,11 @@
 </head>
 
 <body>
-    <h1>Contact</h1>
     <%- 
     include('./nav.ejs') 
     %>
+    <h1>Contact</h1>
+
 
     <form id="contact-form">
         <div class="form-row">
@@ -24,7 +25,7 @@
         <br>
         <input type="text" id="email" class="form-control" placeholder="Email">
         <br>
-        
+
         <textarea class="form-control" rows=10 cols=70 id="body" placeholder="Your message..."></textarea>
         <br>
         <input type="button" class="btn btn-primary" id="send" value="Send">

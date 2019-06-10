@@ -11,6 +11,7 @@
     "@types/express-mysql-session": "^1.2.2",
     "@types/express-session": "^1.15.12",
     "@types/jquery": "^3.3.29",
+    "@types/materialize-css": "^1.0.6",
     "@types/mocha": "^5.2.7",
     "@types/mysql": "^2.15.6",
     "@types/nodemailer": "^4.6.8",
@@ -27,6 +28,7 @@
     "express-ts": "0.0.1-dev.5",
     "google-closure-compiler": "^20190415.0.0",
     "jquery": "^3.4.1",
+    "materialize-css": "^1.0.0-rc.2",
     "mocha": "^6.1.4",
     "mysql": "^2.17.1",
     "nodemailer": "^6.2.1",
@@ -41,7 +43,10 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "react:build:test_app": "npx tsc react_components/test_app/src/index.tsx --jsx react; browserify react_components/test_app/src/index.js > react_components/test_app/build/index.js"
+    "react:build:test_app": "npx tsc react_components/test_app/src/index.tsx --jsx react; browserify react_components/test_app/src/index.js > react_components/test_app/build/index.js",
+    "react:build:post_config_form": "npx tsc react_components/post_config_form/src/index.tsx --jsx react; browserify react_components/post_config_form/src/index.js > react_components/post_config_form/build/index.js",
+    "react:build:signup_form": "npx tsc react_components/signup_form/src/index.tsx --jsx react; browserify react_components/signup_form/src/index.js > react_components/signup_form/build/index.js",
+    "react:build:login_form": "npx tsc react_components/login_form/src/index.tsx --jsx react; browserify react_components/login_form/src/index.js > react_components/login_form/build/index.js"
   },
   "repository": {
     "type": "git",
