@@ -52,6 +52,9 @@ function removeBuildScript(COMPONENT_NAME) {
         delete pkg["scripts"]["react:build:" + COMPONENT_NAME];
 
         fs.writeFileSync(PACKAGE_JSON_FILEPATH, JSON.stringify(pkg))
+        
+        console.log("Build script for " + COMPONENT_NAME + " has been deleted");
+
     } else {
         console.error("error: Cannot remove " + COMPONENT_NAME + ". No such component exists.");
     }
