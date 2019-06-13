@@ -50,7 +50,7 @@ resetBuildDirectory() {
 makeServerFiles() {
 
     # Compiles the main server file
-    npx tsc app/server.ts -m CommonJS -outDir build/
+    npx tsc app/server.ts -m CommonJS --target es5 -outDir build/
 
 }
 

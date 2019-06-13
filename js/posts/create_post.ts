@@ -6,14 +6,14 @@ import * as M from 'materialize-css';
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    M.AutoInit();
-    // run the tinymce editor
-    tinymce.init({
-        selector: "#post_editor",
-        skin_url: '/lib/tinymce/skins/ui/oxide',
+    // M.AutoInit();
+    // // run the tinymce editor
+    // tinymce.init({
+    //     selector: "#post_editor",
+    //     skin_url: '/lib/tinymce/skins/ui/oxide',
 
-    })
+    // })
 
 
-    tinymce.get('post_editor').getContent();
+    // tinymce.get('post_editor').getContent();
 })

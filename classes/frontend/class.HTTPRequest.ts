@@ -1,18 +1,19 @@
-import {HTTP} from '../class.definitions';
-class HTTPRequest {
+import {HTTP, HTTP_METHOD} from '../class.definitions';
+
+
+class HTTPRequest<T=object> {
     
 
     private xhttp: XMLHttpRequest;
     private url: string;
-    private method: string;
-    private timeReqStart: number;
-    private timeReqEnd: number;
+    private method: HTTP_METHOD;
+
     /**
      *
      * @param method HTTP Request Method
      * @param url HTTP Request URL
      */
-    constructor(method: string, url: string) {
+    constructor(method: HTTP_METHOD, url: string) {
         this.method = method;
         this.url = url;
         if (XMLHttpRequest) {
@@ -44,7 +45,7 @@ class HTTPRequest {
      * @param DATA payload
      * @param requireStatus
      */
-    private exec(DATA?: string, requireStatus?: number): Promise<object> {
+    private exec(DATA?: string, requireStatus?: number): Promise<T> {
         let req = this.xhttp;
         let method = this.method;
         let url = this.url;
@@ -53,7 +54,7 @@ class HTTPRequest {
 
             req.onreadystatechange = function () {
 
-                if (req.readyState == XMLHttpRequest.DONE) {
+/*                 if (req.readyState == XMLHttpRequest.DONE) {
 
                     // get request must
                     if (method.toUpperCase() === "GET") {
@@ -79,7 +80,7 @@ class HTTPRequest {
 
 
 
-                }
+                } */
 
                 // check if the AJAX is done and the correct HTTP Response 
                 // status is returned
@@ -114,7 +115,7 @@ class HTTPRequest {
     }
 
     
-    public execVoid(requireStatus?: number): Promise<object> {
+    public execVoid(requireStatus?: number): Promise<T> {
         this.xhttp.open(this.method, this.url);
         return this.exec(null, requireStatus);
     }
@@ -123,7 +124,7 @@ class HTTPRequest {
      * Send the request off with a query string payload DATA
      * @param DATA JSON payload
      */
-    public execAsQuery(DATA: object, requireStatus?: number): Promise<object> {
+    public execAsQuery(DATA: object, requireStatus?: number): Promise<T> {
         
         this.xhttp.open(this.method, this.url);
         
@@ -143,7 +144,7 @@ class HTTPRequest {
      * Send the request off with a JSON payload DATA
      * @param DATA JSON payload
      */
-    public execAsJSON(DATA: object, requireStatus?: number): Promise<object> {
+    public execAsJSON(DATA: object, requireStatus?: number): Promise<T> {
         this.xhttp.open(this.method, this.url);
         this.setHeader('Content-Type', 'application/json')
         DATA['analytics'] = {

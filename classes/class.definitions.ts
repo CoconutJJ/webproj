@@ -10,7 +10,8 @@ const HTTP = {
         INTERNAL_SERVER_ERROR: 500,
         SERVICE_UNAVAILABLE: 503
     }
-
 }
 
-export { HTTP };
+type HTTP_METHOD = "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE" | "PATCH";
+
+export { HTTP, HTTP_METHOD };

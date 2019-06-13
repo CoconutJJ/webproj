@@ -26,7 +26,7 @@ class App extends React.Component {
             [e.target.id]: e.target.value
         })
 
-        if (this.state.username.length > 3 && this.state.password.length > 8) {
+        if (this.state.username.length > 3 && this.state.password.length >= 8) {
             this.enableLoginBtn();
         } else {
             this.disableLoginBtn();
