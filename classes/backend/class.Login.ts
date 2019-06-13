@@ -30,7 +30,7 @@ export class Login {
    * Rejects  Error if creation process failed unexpectedly.
    * @param userInfo User information object
    */
-  public static async createUser(userInfo: User): Promise<boolean> {
+  public static async createUser(userInfo: Pick<User, Exclude<keyof User, 'id'>>): Promise<boolean> {
 
     // generate the hashed password
     let hashedPassword =
@@ -74,28 +74,24 @@ export class Login {
         if (rows.length != 1) {
           return false;
         }
-
+        let user_data: User = {
+          'id': rows[0]['id'],
+          'firstname': rows[0]['firstname'],
+          'lastname': rows[0]['lastname'],
+          'username': rows[0]['username'],
+          'password': rows[0]['password'],
+          'email': rows[0]['email']
+        }
         if (session.loggedIn) {
           session.destroy(function (err) {
             session.regenerate(function (err) {
 
-              session['user'] = <User>{
-                'firstname': rows[0]['firstname'],
-                'lastname': rows[0]['lastname'],
-                'username': rows[0]['username'],
-                'password': rows[0]['password'],
-                'email': rows[0]['email']
-              };
+              session['user'] = user_data;
+              
             })
           })
         } else {
-          session['user'] = <User>{
-            'firstname': rows[0]['firstname'],
-            'lastname': rows[0]['lastname'],
-            'username': rows[0]['username'],
-            'password': rows[0]['password'],
-            'email': rows[0]['email']
-          };
+          session['user'] = user_data;
         }
         session.loggedIn = true;
         return true;

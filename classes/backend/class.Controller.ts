@@ -1,7 +1,7 @@
 import { db } from "./class.db";
 
 export abstract class Controller<T> {
-
+    
     private tableName: string;
     private primaryKey: keyof T;
     protected params: T;
@@ -13,14 +13,26 @@ export abstract class Controller<T> {
         this.db = new db();
     }
 
+
     public get(param: keyof T) {
         return this.params[param];
     }
 
-    public set(param: keyof T, value: T[keyof T]) {
-        this.params[param] = value;
-    }
+    
 
+    public set(param: keyof T, value: T[keyof T]) {
+        
+        if (param == this.primaryKey) {
+            throw new Error("error: Updating the primary key of the Model is not allowed!")
+        }
+
+        this.params[param] = value;
+
+    }
+    /**
+     * Process the filter
+     * @param filter T
+     */
     private static proccessFilter<T>(filter: (Partial<T>)[]): { clause: string, values: (string | number)[] } {
         if (filter.length > 0) {
             let assignments, filter_clauses = [], values = [];
@@ -53,9 +65,11 @@ export abstract class Controller<T> {
         }
     }
 
+    
+
     protected static all<T>(tableName: string, filter?: Partial<T>[]): Promise<T[]> {
 
-        let values;
+        let values = [];
         let dbh = new db();
 
         let sqlq = "SELECT * FROM " + tableName;
@@ -65,9 +79,26 @@ export abstract class Controller<T> {
             values = processed_stmt.values;
             sqlq += " WHERE " + processed_stmt.clause;
         }
-        console.log(sqlq);
+        
         return dbh.query<T>(sqlq, values);
 
+    }
+
+    protected static columns<T>(tableName: string, columnNames:(keyof T)[], filter?: Partial<T>[]): Promise<T[]> {
+        let values = [];
+        let dbh = new db();
+        let esc_cols = columnNames.map(function (entry) {
+            return "`" + entry + "`";
+        })
+        let sqlq = "SELECT " + esc_cols.join(',') + " FROM " + tableName;
+
+        if (filter !== undefined) {
+            let processed_stmt = Controller.proccessFilter(filter)
+            values = processed_stmt.values;
+            sqlq += " WHERE " + processed_stmt.clause;
+        }
+        
+        return dbh.query<T>(sqlq, values);
     }
 
     public static async create<T>(tableName: string, params: Partial<T>) {
@@ -83,7 +114,7 @@ export abstract class Controller<T> {
             vals.push(params[k]);
             placeholders.push("?");
         }
-
+        console.log(cols, vals);
         return dbh.query("INSERT INTO " + tableName + " (" + cols.join(",") + ") VALUES (" + placeholders.join(",") + ")", vals);
 
     }
@@ -94,7 +125,6 @@ export abstract class Controller<T> {
         let vals = [];
 
         for (let k in this.params) {
-            // do not update the id field. this is the field we are filtering by...
             if (k == this.primaryKey) continue;
 
             cols.push("`" + k + "` = ?");
@@ -106,8 +136,10 @@ export abstract class Controller<T> {
     public delete() {
         let dbh = new db();
 
-        return dbh.query("DELETE FROM " + this.tableName +" WHERE " + this.primaryKey + " = ?", [this.params[this.primaryKey]])
+        return dbh.query("DELETE FROM " + this.tableName + " WHERE " + this.primaryKey + " = ?", [this.params[this.primaryKey]])
     }
+
+    public abstract getModel(): T;
 
     public abstract toJSON(): string;
 

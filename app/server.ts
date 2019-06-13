@@ -9,6 +9,7 @@ import * as fs from 'fs';
 import * as bodyparser from 'body-parser'
 import * as currUser from '../classes/backend/class.CurrentUser';
 import * as crypto from 'crypto'
+import * as compress from 'compression';
 const app: express.Application = express();
 
 var mysqlstore = new mysql_store({ 
@@ -22,6 +23,8 @@ var mysqlstore = new mysql_store({
 var SECRET = fs.readFileSync(__dirname + '/../../SESSION_SECRET', { encoding: 'UTF-8' }).toString().replace('\n', '');
 
 app.set('view engine', 'ejs');
+
+app.use(compress());
 
 app.use(session({
   secret: SECRET,
@@ -58,24 +61,7 @@ app.use(function (req, res, next) {
     },
 
   };
-
-  req.session['VALID_REQUEST'] = (req.method !== "GET" && req.session['CSRF_TOKEN'] === req.headers['CSRF_TOKEN']);
-
-  if (req.method == "GET") {
-    let csrf_tok = crypto.randomBytes(128, function (err, buf) {
-      res.setHeader("CSRF-Token", buf.toString('hex'));
-      res.cookie('CSRF_TOKEN', buf.toString('hex'), {
-        path: '/',
-        expires: new Date("January 1, 2119 00:00:00"),
-        sameSite: "Strict"
-        
-      });
-      req.session['CSRF_TOKEN'] = buf.toString('hex');
-      next();
-    })
-  } else {
-    next();
-  }
+  next();
 });
 
 

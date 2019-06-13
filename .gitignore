@@ -4,7 +4,7 @@ build/
 .vscode/
 react_components/*/build/*.js
 react_components/*/src/*.js
-
+mysql.log
 js/*.js
 classes/*.js
 classes/frontend/*.js

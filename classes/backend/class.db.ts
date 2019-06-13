@@ -5,10 +5,6 @@ export interface DatabaseConnectionManager {
   query(sql: string, values: string[]): Promise<any>;
 }
 
-
-
-
-
 export class db implements DatabaseConnectionManager {
   
   /**
@@ -19,6 +15,7 @@ export class db implements DatabaseConnectionManager {
 
 
   constructor() {
+  
     if (!db.sql) {
       db.sql = mysql.createPool({
         host: 'localhost',

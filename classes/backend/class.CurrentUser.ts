@@ -6,25 +6,28 @@ export class CurrentUser {
         this.sess = session;
     }
 
-
-    public getFirstName() {
-        return this.sess['firstname'];
+    public get id() {
+        return this.sess['user']['id'];
     }
 
-    public getLastName() {
-        return this.sess['lastname'];
+    public get firstName() {
+        return this.sess['user']['firstname'];
     }
 
-    public getUserName() {
-        return this.sess['username'];
+    public get lastName() {
+        return this.sess['user']['lastname'];
     }
 
-    public getPassword() {
-        return this.sess['password'];
+    public get userName() {
+        return this.sess['user']['username'];
     }
 
-    public getEmail() {
-        return this.sess['email'];
+    public get password() {
+        return this.sess['user']['password'];
+    }
+
+    public get email() {
+        return this.sess['user']['email'];
     }
 
     public isLoggedIn() {
