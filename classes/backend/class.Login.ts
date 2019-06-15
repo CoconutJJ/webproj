@@ -8,6 +8,11 @@ import { Permissions } from '../class.definitions'
 export class Login {
   private static database: db.DatabaseConnectionManager = new db.db();
 
+  /**
+   * Authenticate and login the user.
+   * @param username
+   * @param password
+   */
   public static async login(username: string, password: string):
     Promise<boolean> {
     try {

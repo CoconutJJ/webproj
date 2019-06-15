@@ -56,7 +56,8 @@ namespace Permissions {
             delete: 'posts.admin.delete',
             edit: 'posts.admin.edit'
         }
-
+        
+        
     }
 
 
