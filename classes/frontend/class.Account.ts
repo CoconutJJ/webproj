@@ -51,8 +51,6 @@ class Account {
         let req = new HTTPRequest("POST", "/qa/signup");
         var errors = [];
 
-        
-
         return req.execAsJSON({
             "firstname": firstname,
             "lastname": lastname,

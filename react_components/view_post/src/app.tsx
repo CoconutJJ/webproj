@@ -18,7 +18,7 @@ class App extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             posts: []
-    
+
         }
     }
 
@@ -26,7 +26,7 @@ class App extends React.Component<IProps, IState> {
         var req = new HTTPRequest("GET", "/qa/posts")
 
         req.execVoid(HTTP.RESPONSE.OK).then(function (data: []) {
-            
+
             var posts = [];
 
             data.forEach(function (entry, index) {
@@ -45,9 +45,9 @@ class App extends React.Component<IProps, IState> {
                 )
             }.bind(this))
 
-            
+
             this.updatePosts(posts)
-            
+
         }.bind(this))
 
     }
@@ -80,7 +80,7 @@ class App extends React.Component<IProps, IState> {
     }
 
     componentDidMount = () => {
-        
+
 
     }
 

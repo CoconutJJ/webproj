@@ -13,7 +13,7 @@ buildJS() {
 
     echo "Building $1 -> $exportdir/$fname.min.js"
     
-    npx tsc $1 -m commonjs 
+    npx tsc $1 -m commonjs
     # npx browserify $file_path/$fname.js | npx google-closure-compiler --warning_level QUIET --compilation_level SIMPLE --js_output_file "$exportdir/$fname.min.js" 2>&1 > .setup/last_build.log
 
     if ! [ -d $exportdir ]; then
@@ -60,7 +60,6 @@ makeClientFiles() {
     buildCSS sass/main.scss
     buildCSS sass/qa_layout.scss
     buildJS js/contact.ts
-    buildJS js/posts/create_post.ts
     buildJS js/index.ts
 }
 

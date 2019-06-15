@@ -1,6 +1,8 @@
 import * as bcrypt from 'bcrypt';
 import { User } from '../../interfaces/interface.db'
 import * as db from './class.db'
+import PermissionManager from './class.PermissionManager';
+import { Permissions } from '../class.definitions'
 
 
 export class Login {
@@ -10,10 +12,13 @@ export class Login {
     Promise<boolean> {
     try {
       const rows = await this.database.query(
-        'SELECT username, password FROM users WHERE username = ?',
+        'SELECT id, username, password FROM users WHERE username = ?',
         [username]);
       if (rows.length == 1) {
-        return this._verifyPassword(password, rows[0].password);
+
+        let hasPermission = await PermissionManager.hasPermission(rows[0]['id'], Permissions.Account.login);
+
+        return hasPermission && this._verifyPassword(password, rows[0].password);
       } else {
         return false;
       }
@@ -30,7 +35,7 @@ export class Login {
    * Rejects  Error if creation process failed unexpectedly.
    * @param userInfo User information object
    */
-  public static async createUser(userInfo: Pick<User, Exclude<keyof User, 'id'>>): Promise<boolean> {
+  public static async createUser(userInfo: Pick<User, Exclude<keyof User, 'id' | 'permissions'>>): Promise<boolean> {
 
     // generate the hashed password
     let hashedPassword =
@@ -74,27 +79,31 @@ export class Login {
         if (rows.length != 1) {
           return false;
         }
-        let user_data: User = {
-          'id': rows[0]['id'],
-          'firstname': rows[0]['firstname'],
-          'lastname': rows[0]['lastname'],
-          'username': rows[0]['username'],
-          'password': rows[0]['password'],
-          'email': rows[0]['email']
-        }
-        if (session.loggedIn) {
-          session.destroy(function (err) {
-            session.regenerate(function (err) {
 
-              session['user'] = user_data;
-              
+        return PermissionManager.getPermissions(rows[0]['id']).then(function (permission_names) {
+          let user_data: User = {
+            id: rows[0]['id'],
+            firstname: rows[0]['firstname'],
+            lastname: rows[0]['lastname'],
+            username: rows[0]['username'],
+            password: rows[0]['password'],
+            email: rows[0]['email'],
+            permissions: permission_names
+          }
+          if (session.loggedIn) {
+            session.destroy(function (err) {
+              session.regenerate(function (err) {
+
+                session['user'] = user_data;
+
+              })
             })
-          })
-        } else {
-          session['user'] = user_data;
-        }
-        session.loggedIn = true;
-        return true;
+          } else {
+            session['user'] = user_data;
+          }
+          session.loggedIn = true;
+          return true;
+        })
       })
   }
 

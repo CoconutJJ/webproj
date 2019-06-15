@@ -8,3 +8,4 @@ mysql.log
 js/*.js
 classes/*.js
 classes/frontend/*.js
+new.sql

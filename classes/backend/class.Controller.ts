@@ -19,7 +19,7 @@ export abstract class Controller<T> {
     }
 
     
-
+    
     public set(param: keyof T, value: T[keyof T]) {
         
         if (param == this.primaryKey) {
@@ -130,8 +130,8 @@ export abstract class Controller<T> {
             cols.push("`" + k + "` = ?");
             vals.push(this.params[k]);
         }
-
-        return dbh.query("UPDATE" + this.tableName + " SET " + cols.join(',') + " WHERE `" + this.primaryKey + "` = ?", [...vals, this.params[this.primaryKey]])
+        console.log("UPDATE " + this.tableName + " SET " + cols.join(',') + " WHERE `" + this.primaryKey + "` = ?")
+        return dbh.query("UPDATE " + this.tableName + " SET " + cols.join(',') + " WHERE `" + this.primaryKey + "` = ?", [...vals, this.params[this.primaryKey]])
     }
     public delete() {
         let dbh = new db();
