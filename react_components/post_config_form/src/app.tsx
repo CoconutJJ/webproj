@@ -42,6 +42,8 @@ class App extends React.Component {
                 M.toast({html: ret['msg']});
             }
 
+        }).catch (function (ret) {
+            M.toast({html: ret['code'] + ": " + ret['msg'], classes: "red"})
         })
 
     }

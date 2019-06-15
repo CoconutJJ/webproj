@@ -1,20 +1,18 @@
 import * as express from 'express';
-import * as path from 'path';
 import * as qa from './forum';
 import * as form from './form';
-// import * as db from '../classes/backend/class.db';
+import * as api from './api';
 import * as session from 'express-session';
 import * as mysql_store from 'express-mysql-session';
 import * as fs from 'fs';
 import * as bodyparser from 'body-parser'
-import * as currUser from '../classes/backend/class.CurrentUser';
-import * as crypto from 'crypto'
+import { CurrentUser } from '../classes/backend/class.CurrentUser';
 import * as compress from 'compression';
 const app: express.Application = express();
 
-var mysqlstore = new mysql_store({ 
+var mysqlstore = new mysql_store({
   host: "localhost",
-  port: 3306, 
+  port: 3306,
   database: "site",
   user: "root",
   password: ""
@@ -48,14 +46,14 @@ app.use(bodyparser.json());
 
 
 app.use(function (req, res, next) {
-  
-  
-  req['currentUser'] = new currUser.CurrentUser(req.session);
+
+
+  req.ContextUser = new CurrentUser(req.session);
 
   app.locals = {
 
     site: {
-      loggedIn: req['currentUser'].isLoggedIn(),
+      loggedIn: req.ContextUser.isLoggedIn(),
       user: req.session['user'],
       env: app.get('env')
     },
@@ -64,6 +62,7 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.use('/api', api)
 
 app.use('/qa', qa);
 
@@ -100,7 +99,7 @@ app.get('/404', function (req, res) {
 
 app.use('/css', express.static('build/css'));
 
-app.use('/js',express.static('build/js'));
+app.use('/js', express.static('build/js'));
 
 app.use('/lib', express.static('lib'));
 

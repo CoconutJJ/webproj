@@ -1,6 +1,6 @@
 import * as React from "react";
 import Account from "../../../classes/frontend/class.Account";
-
+import * as M from 'materialize-css'
 class App extends React.Component {
     state = {
         username: "",
@@ -73,20 +73,6 @@ class App extends React.Component {
             .catch(function (ret) {
                 this.disableProgressBar();
                 M.toast({ html: ret['msg'], classes: 'red' })
-                // switch (ret['code']) {
-                //   case 'LOGIN_FAILED':
-                //     M.toast({ html: ret['msg'] });
-                //     break;
-                //   case 'LOGIN_INTERNAL_ERROR':
-                //     M.toast({ html: ret['msg'] });
-                //     break;
-                //   case 'INVALID_USERNAME':
-                //     M.toast({ html: ret['msg'] });
-                //     break;
-                //   case 'INVALID_PASSWORD':
-                //     M.toast({ html: ret['msg'] });
-                //     break;
-                // }
             }.bind(this));
     }
 

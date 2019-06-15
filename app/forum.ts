@@ -1,34 +1,31 @@
 import * as express from 'express';
 import { Login } from '../classes/backend/class.Login';
 import * as auth from './auth';
-import { HTTP } from '../classes/class.definitions';
-import { CurrentUser } from '../classes/backend/class.CurrentUser';
+import { HTTP, Permissions } from '../classes/class.definitions';
 import { Posts } from '../classes/backend/class.Posts';
 import { PostsModel } from '../interfaces/interface.db';
 
 const app = express.Router();
 
-var currUser: CurrentUser;
-
 
 app.use('/auth', auth);
 
-app.use(function(req, res, next) {
-    currUser = req['currentUser'];
-    next();
-})
 
 app.get('/', function (req, res) {
     res.render('../pages/qa/qa_home.ejs', { title: 'Home' })
 });
 
 
+app.get('/db/view', function (req, res) {
+    res.render('../pages/qa/qa_view_db.ejs', { title: 'View Database' });
+})
+
 app.get('/posts/:id(\\d+)?', function (req, res) {
-    if (!req['currentUser'].isLoggedIn()) {
+    if (!req.ContextUser.isLoggedIn()) {
         res.redirect('/qa/login');
     } else {
         Posts.getColumns(["id", "title", "body", "created_at", "showDate", "author"]).then(function (posts) {
-            
+
             var allPosts = [];
             for (let i = 0; i < posts.length; i++) {
 
@@ -45,42 +42,48 @@ app.get('/posts/:id(\\d+)?', function (req, res) {
 });
 
 app.get('/posts/view', function (req, res) {
-    
-    res.render('../pages/qa/qa_view_post.ejs', {title: 'All Posts'})
+
+    res.render('../pages/qa/qa_view_post.ejs', { title: 'All Posts' })
 
 })
 
 app.post('/posts', function (req, res) {
+    if (req.ContextUser.hasPermission(Permissions.Posts.owner.create)) {
+        var post = Posts.createPost({
+            title: req.body['title'],
+            author: req.ContextUser.id(),
+            body: req.body['body'],
+            showAuthor: req.body['showAuthor'],
+            showDate: req.body['showDate']
+        }).then(function () {
 
-    var post = Posts.createPost({
-        title: req.body['title'],
-        author: currUser.id,
-        body: req.body['body'],
-        created_at: Math.floor(Date.now()/1000),
-        updated_at: Math.floor(Date.now()/1000),
-        showAuthor: req.body['showAuthor'],
-        showDate: req.body['showDate']
-    }).then(function () {
+            res.status(HTTP.RESPONSE.ACCEPTED).send(JSON.stringify({
+                code: "OK",
+                msg: "Post successfully created"
+            }))
 
-        res.status(HTTP.RESPONSE.ACCEPTED).send(JSON.stringify({
-            code: "OK",
-            msg: "Post successfully created"
+        }).catch(function (err) {
+            res.status(HTTP.RESPONSE.INTERNAL_SERVER_ERROR).send(JSON.stringify({
+                code: "ERR",
+                msg: err.toString()
+            }))
+        })
+    } else {
+        res.status(HTTP.RESPONSE.UNAUTHORIZED).send(JSON.stringify({
+            code: "EPERM",
+            msg: "You do not have permission to perform this action."
         }))
-
-    }).catch(function (err) {
-        res.status(HTTP.RESPONSE.INTERNAL_SERVER_ERROR).send(JSON.stringify({
-            code: "ERR",
-            msg: err.toString()
-        }))
-    })
+    }
 })
 
 app.patch('/posts/:id(\\d+)', function (req, res) {
-    Posts.allPosts([{id: req.params['id']}]).then(function (posts) {
+    Posts.allPosts([{ id: req.params['id'] }]).then(function (posts) {
         if (posts.length == 1) {
-            posts[0].set('title', req.body['title']);
-            posts[0].set('body', req.body['body']);
-            return posts[0].update();
+
+            return posts[0].updatePost({
+                title: req.body['title'],
+                body: req.body['body']
+            });
         } else {
             return Promise.reject("An error has occurred. Error Code: 1");
         }
@@ -97,8 +100,8 @@ app.patch('/posts/:id(\\d+)', function (req, res) {
     })
 })
 
-app.delete('/posts/:id(\\d+)', function(req, res) {
-    Posts.allPosts([{id: req.params['id']}]).then(function (posts){
+app.delete('/posts/:id(\\d+)', function (req, res) {
+    Posts.allPosts([{ id: req.params['id'] }]).then(function (posts) {
         if (posts.length == 1) {
             posts[0].delete();
             res.status(HTTP.RESPONSE.OK).send(JSON.stringify({
@@ -111,7 +114,7 @@ app.delete('/posts/:id(\\d+)', function(req, res) {
                 msg: 'An error has occurred. Error Code: 1'
             }))
         }
-    }).catch(function(){
+    }).catch(function () {
         res.status(HTTP.RESPONSE.INTERNAL_SERVER_ERROR).send(JSON.stringify({
             code: 'ERR',
             msg: 'An error has occurred. Error Code: 2'
@@ -121,7 +124,7 @@ app.delete('/posts/:id(\\d+)', function(req, res) {
 
 app.get('/posts/create', function (req, res) {
 
-    if (req['currentUser'].isLoggedIn()) {
+    if (req.ContextUser.isLoggedIn()) {
         res.render('../pages/qa/qa_create_post.ejs', { title: 'Create Post' });
     } else {
         res.redirect('/qa/login');
@@ -130,7 +133,7 @@ app.get('/posts/create', function (req, res) {
 
 
 app.get('/signup', function (req, res) {
-    if (!req['currentUser'].isLoggedIn()) {
+    if (!req.ContextUser.isLoggedIn()) {
         res.render('../pages/qa/qa_signup.ejs', { title: 'Sign Up' });
     } else {
         res.redirect('/');
@@ -185,7 +188,7 @@ app.post('/login', function (req, res) {
                     'msg': 'Incorrect Username / Password'
                 }));
             }
-            
+
         }).then(function (success) {
             if (success) {
                 res.status(HTTP.RESPONSE.ACCEPTED).send(JSON.stringify({
@@ -211,7 +214,7 @@ app.post('/login', function (req, res) {
 
 app.get('/login', function (req, res) {
 
-    if (!currUser.isLoggedIn()) {
+    if (!req.ContextUser.isLoggedIn()) {
         res.render('../pages/qa/qa_login.ejs', { title: 'Login' })
     } else {
         res.redirect(HTTP.RESPONSE.FOUND, '/')
@@ -219,15 +222,15 @@ app.get('/login', function (req, res) {
 })
 
 app.get('/login/info', function (req, res) {
-    if (currUser.isLoggedIn()) {
-        console.log(currUser.userName);
+    if (req.ContextUser.isLoggedIn()) {
+        console.log(req.ContextUser.userName());
 
         if (req.xhr) {
             res.send(JSON.stringify({
-                username: currUser.userName,
-                firstname: currUser.firstName,
-                lastname: currUser.lastName,
-                email: currUser.email
+                username: req.ContextUser.userName(),
+                firstname: req.ContextUser.firstName(),
+                lastname: req.ContextUser.lastName(),
+                email: req.ContextUser.email()
             }));
         } else {
             res.redirect('/404');
@@ -242,9 +245,9 @@ app.get('/login/info', function (req, res) {
 })
 
 app.get('/logout', function (req, res) {
-    req.session.destroy(function () {
-        res.redirect(HTTP.RESPONSE.FOUND, '/qa/login');
-    });
+    req.ContextUser.logout().then(function () {
+        res.redirect('/qa/login');
+    })
 })
 
 
