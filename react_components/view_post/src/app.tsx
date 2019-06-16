@@ -20,9 +20,7 @@ class App extends React.Component<IProps, IState> {
             posts: []
 
         }
-    }
 
-    componentWillMount = () => {
         var req = new HTTPRequest("GET", "/qa/posts")
 
         req.execVoid(HTTP.RESPONSE.OK).then(function (data: []) {
@@ -49,6 +47,10 @@ class App extends React.Component<IProps, IState> {
             this.updatePosts(posts)
 
         }.bind(this))
+    }
+
+    componentDidMount = () => {
+
 
     }
 
@@ -78,12 +80,6 @@ class App extends React.Component<IProps, IState> {
 
         this.updatePosts(posts);
     }
-
-    componentDidMount = () => {
-
-
-    }
-
 
     render(): React.ReactNode {
 

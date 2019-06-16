@@ -64,6 +64,7 @@ export class Posts extends Controller<PostsModel>{
     }
     
     public updatePost(params: Partial<Pick<PostsModel, Exclude<keyof PostsModel, 'id' | 'updated_at' | 'created_at'>>>) {
+
         for (let k in params) {
             this.set(<keyof PostsModel>k, params[k]);
         }
