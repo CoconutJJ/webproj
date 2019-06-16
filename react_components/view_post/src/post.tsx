@@ -48,11 +48,12 @@ class Post extends React.Component<IProps, IState> {
             edit: {
                 title: "",
             }
-        }
+        };
 
     }
 
     componentDidMount = () => {
+
         this.setState({
             id: this.props['id'],
             title: this.props['title'],
@@ -66,7 +67,7 @@ class Post extends React.Component<IProps, IState> {
             selector: "#edit_body_" + this.props['id'],
             skin_url: '/lib/tinymce/skins/ui/oxide',
         })
-        
+
 
     }
 
@@ -82,18 +83,27 @@ class Post extends React.Component<IProps, IState> {
 
             req.execVoid(HTTP.RESPONSE.OK)
                 .then(function () {
+
                     this.props.deletePost();
+
                     M.toast({ html: "Your post was deleted!", classes: "green" })
+
                 }.bind(this))
                 .catch(function (err: Error) {
-                    M.toast({ html: "We have trouble deleting your post. Try again later", classes: "red" });
+
+                    M.toast({
+                        html: "We have trouble deleting your post. Try again later",
+                        classes: "red"
+                    });
+
                     console.error(err.message);
+
                 }.bind(this))
         }
     }
 
     promptSaveChange = () => {
-        if (this.state.title != this.state.edit.title || tinymce.get('edit_body').getContent() !== this.state.body) {
+        if (this.state.title != this.state.edit.title || tinymce.get('edit_body_' + this.props.id).getContent() !== this.state.body) {
             return confirm("You have unsaved changes. Are you sure you would like to proceed?")
         } else {
             return true;
@@ -133,15 +143,20 @@ class Post extends React.Component<IProps, IState> {
                 title: this.state.edit.title,
                 body: body_content
             });
-            this.hideProgress();
             this.disableEdit();
             M.toast({
                 html: ret['msg'],
                 classes: 'green'
             })
-        }.bind(this)).catch(function () {
+        }.bind(this)).catch(function (err: Error) {
+
+            console.log(err.message);
+            M.toast({
+                html: "We had trouble updating the post. Try again later."
+            })
+        }.bind(this)).finally(function () {
             this.hideProgress();
-        });
+        }.bind(this))
     }
 
     handleTitleEdit = (e) => {
@@ -158,12 +173,13 @@ class Post extends React.Component<IProps, IState> {
             edit: {
                 title: this.state.title
             }
-        }, function() {
+        }, function () {
             M.AutoInit();
         })
     }
 
     disableEdit = () => {
+        console.log('disabled: ' + this.state.title);
         this.setState({
             editEnabled: false
         })
@@ -200,9 +216,10 @@ class Post extends React.Component<IProps, IState> {
     }
 
     actions = () => {
-        if (this.state.editEnabled) {
-            return (
-                <div className="row">
+
+        return (
+            <>
+                <div className="row" style={{ display: this.state.editEnabled ? null : 'none' }}>
                     <a className="btn-small green waves-effect" onClick={this.handleEditSave}><i className="material-icons left">save</i> Save</a>
                     <a className='dropdown-trigger btn-flat blue-text' href='#' data-target='edit-options'>More</a>
                     <ul id='edit-options' className='dropdown-content'>
@@ -224,14 +241,13 @@ class Post extends React.Component<IProps, IState> {
                     </div>
 
                 </div>
-            )
-        } else {
-            return (
-                <div className="row">
+
+                <div className="row" style={{ display: this.state.editEnabled ? 'none' : null }}>
                     <a className="btn-small orange waves-effect" onClick={this.handleEdit}><i className="material-icons left">edit</i> Edit</a>
                 </div>
-            )
-        }
+            </>
+        )
+
     }
 
     render(): React.ReactNode {
@@ -245,7 +261,6 @@ class Post extends React.Component<IProps, IState> {
                 </div>
             </div>
         )
-
     }
 }
 export default Post;

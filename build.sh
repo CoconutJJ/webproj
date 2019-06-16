@@ -69,6 +69,8 @@ startServer() {
     node build/app/server.js
 }
 
+NODE_ENV=production
+
 if [ "$1" = "start" ]; then
     startServer
 elif [ "$1" = "make" ]; then

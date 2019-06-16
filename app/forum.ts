@@ -77,8 +77,30 @@ app.post('/posts', function (req, res) {
 })
 
 app.patch('/posts/:id(\\d+)', function (req, res) {
+
+    // check they potentially have edit permissions for this post
+    if (!req.ContextUser.hasPermission(Permissions.Posts.owner.edit) && !req.ContextUser.hasPermission(Permissions.Posts.admin.edit)) {
+        res.send(HTTP.RESPONSE.UNAUTHORIZED).send(JSON.stringify({
+            code: "EPERM",
+            msg: "You are not authorized to perform that action"
+        }))
+        return
+    }
+
     Posts.allPosts([{ id: req.params['id'] }]).then(function (posts) {
         if (posts.length == 1) {
+
+
+            // they must an admin to edit someone else's post.
+            if (posts[0].get('author') !== req.ContextUser.id()) {
+                if (!req.ContextUser.hasPermission(Permissions.Posts.admin.edit)) {
+                    res.send(HTTP.RESPONSE.UNAUTHORIZED).send(JSON.stringify({
+                        code: "EPERM",
+                        msg: "You are not authorized to perform that action"
+                    }))
+                    return
+                }
+            }
 
             return posts[0].updatePost({
                 title: req.body['title'],
