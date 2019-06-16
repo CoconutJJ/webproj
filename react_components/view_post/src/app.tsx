@@ -51,7 +51,6 @@ class App extends React.Component<IProps, IState> {
 
     componentDidMount = () => {
 
-
     }
 
     updatePosts = (posts: Array<any>) => {

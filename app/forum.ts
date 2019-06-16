@@ -4,6 +4,8 @@ import * as auth from './auth';
 import { HTTP, Permissions } from '../classes/class.definitions';
 import { Posts } from '../classes/backend/class.Posts';
 import { PostsModel } from '../interfaces/interface.db';
+import { db } from '../classes/backend/class.db';
+
 
 const app = express.Router();
 
@@ -90,18 +92,6 @@ app.patch('/posts/:id(\\d+)', function (req, res) {
     Posts.allPosts([{ id: req.params['id'] }]).then(function (posts) {
         if (posts.length == 1) {
 
-
-            // they must an admin to edit someone else's post.
-            if (posts[0].get('author') !== req.ContextUser.id()) {
-                if (!req.ContextUser.hasPermission(Permissions.Posts.admin.edit)) {
-                    res.send(HTTP.RESPONSE.UNAUTHORIZED).send(JSON.stringify({
-                        code: "EPERM",
-                        msg: "You are not authorized to perform that action"
-                    }))
-                    return
-                }
-            }
-
             return posts[0].updatePost({
                 title: req.body['title'],
                 body: req.body['body']
@@ -151,6 +141,22 @@ app.get('/posts/create', function (req, res) {
     } else {
         res.redirect('/qa/login');
     }
+})
+
+
+app.get('/posts/:id(\\d+)/comments', function (req, res) {
+    let dbh = new db();
+    console.log(req.params['id']);
+    dbh.query(
+        "SELECT comments.*, users.firstname, users.lastname, users.username\
+         FROM comments \
+         INNER JOIN users \
+         ON comments.author = users.id\
+         AND comments.post = ?",
+        [req.params['id']]
+    ).then(function (rows) {
+        res.status(HTTP.RESPONSE.OK).send(JSON.stringify(rows));
+    })
 })
 
 

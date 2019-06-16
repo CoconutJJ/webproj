@@ -4,6 +4,7 @@ import { HTTP } from '../../../classes/class.definitions';
 import * as tinymce from 'tinymce';
 import 'tinymce/themes/silver';
 import * as M from 'materialize-css';
+import Comment from './comment';
 
 interface IState {
     id: number,
@@ -14,6 +15,7 @@ interface IState {
     showDate: boolean
     editEnabled: boolean
     showProgressBar: boolean
+    commentFormEnabled: boolean
     edit: {
         title: string,
     }
@@ -32,6 +34,7 @@ interface IProps {
 
 
 class Post extends React.Component<IProps, IState> {
+    moreBtn: React.RefObject<HTMLAnchorElement>;
 
 
     constructor(props: Readonly<IProps>) {
@@ -45,11 +48,11 @@ class Post extends React.Component<IProps, IState> {
             showDate: true,
             editEnabled: false,
             showProgressBar: false,
+            commentFormEnabled: false,
             edit: {
                 title: "",
             }
         };
-
     }
 
     componentDidMount = () => {
@@ -67,7 +70,6 @@ class Post extends React.Component<IProps, IState> {
             selector: "#edit_body_" + this.props['id'],
             skin_url: '/lib/tinymce/skins/ui/oxide',
         })
-
 
     }
 
@@ -138,25 +140,28 @@ class Post extends React.Component<IProps, IState> {
         req.execAsJSON({
             title: this.state.edit.title,
             body: body_content
-        }, HTTP.RESPONSE.ACCEPTED).then(function (ret) {
-            this.setState({
-                title: this.state.edit.title,
-                body: body_content
-            });
-            this.disableEdit();
-            M.toast({
-                html: ret['msg'],
-                classes: 'green'
-            })
-        }.bind(this)).catch(function (err: Error) {
+        }, HTTP.RESPONSE.ACCEPTED)
+            .then(function (ret) {
+                this.setState({
+                    title: this.state.edit.title,
+                    body: body_content
+                });
+                this.disableEdit();
+                M.toast({
+                    html: ret['msg'],
+                    classes: 'green'
+                })
+            }.bind(this))
+            .catch(function (err: Error) {
 
-            console.log(err.message);
-            M.toast({
-                html: "We had trouble updating the post. Try again later."
-            })
-        }.bind(this)).finally(function () {
-            this.hideProgress();
-        }.bind(this))
+                console.log(err.message);
+                M.toast({
+                    html: "We had trouble updating the post. Try again later."
+                })
+            }.bind(this))
+            .finally(function () {
+                this.hideProgress();
+            }.bind(this))
     }
 
     handleTitleEdit = (e) => {
@@ -174,15 +179,15 @@ class Post extends React.Component<IProps, IState> {
                 title: this.state.title
             }
         }, function () {
-            M.AutoInit();
         })
+
     }
 
     disableEdit = () => {
-        console.log('disabled: ' + this.state.title);
         this.setState({
             editEnabled: false
         })
+
     }
 
     showProgress = () => {
@@ -197,7 +202,21 @@ class Post extends React.Component<IProps, IState> {
         })
     }
 
+    toggleCommentForm = () => {
+        this.setState({
+            commentFormEnabled: !this.state.commentFormEnabled
+        })
+    }
 
+    commentForm = () => {
+        if (this.state.commentFormEnabled) {
+            return (
+                <Comment post_id={this.props.id} />
+            )
+        } else {
+            return (null);
+        }
+    }
 
     content = () => {
         return (
@@ -206,6 +225,8 @@ class Post extends React.Component<IProps, IState> {
                     <span className="card-title">{this.state.title}</span>
                     <div dangerouslySetInnerHTML={{ __html: this.state.body }}></div>
                     <small> {this.state.showDate ? "Posted at: " + this.state.date : ""}</small>
+
+
                 </div>
                 <div style={{ display: this.state.editEnabled ? null : 'none' }}>
                     <input type="text" name="title" value={this.state.edit.title} placeholder={this.state.title} onChange={this.handleTitleEdit} />
@@ -218,22 +239,15 @@ class Post extends React.Component<IProps, IState> {
     actions = () => {
 
         return (
-            <>
+            <div>
                 <div className="row" style={{ display: this.state.editEnabled ? null : 'none' }}>
                     <a className="btn-small green waves-effect" onClick={this.handleEditSave}><i className="material-icons left">save</i> Save</a>
-                    <a className='dropdown-trigger btn-flat blue-text' href='#' data-target='edit-options'>More</a>
-                    <ul id='edit-options' className='dropdown-content'>
-                        <li>
-                            <a href="#!" className="orange-text" onClick={this.resetChanges}>Reset Changes</a>
-                        </li>
-                        <li>
-                            <a href="#!" className="orange-text" onClick={this.handleEdit}>Cancel</a>
-                        </li>
-                        <li>
-                            <a href="#!" className="red-text" onClick={this.handleDelete}>Delete</a>
-                        </li>
 
-                    </ul>
+                    <a href="#!" className="btn-flat orange-text" onClick={this.resetChanges}>Reset Changes</a>
+
+                    <a href="#!" className="btn-flat orange-text" onClick={this.handleEdit}>Cancel</a>
+
+                    <a href="#!" className="btn-flat red-text" onClick={this.handleDelete}>Delete</a>
 
 
                     <div className="progress" style={{ display: this.state.showProgressBar ? null : "none" }}>
@@ -243,9 +257,11 @@ class Post extends React.Component<IProps, IState> {
                 </div>
 
                 <div className="row" style={{ display: this.state.editEnabled ? 'none' : null }}>
-                    <a className="btn-small orange waves-effect" onClick={this.handleEdit}><i className="material-icons left">edit</i> Edit</a>
+                    {this.commentForm()}
+                    <a href="#!" className='blue-text' onClick={this.handleEdit}>Edit Post</a>
+                    <a href="#!" className='blue-text' onClick={this.toggleCommentForm}>{this.state.commentFormEnabled ? 'Hide Comments' : 'Make a comment'}</a>
                 </div>
-            </>
+            </div>
         )
 
     }
@@ -258,6 +274,7 @@ class Post extends React.Component<IProps, IState> {
                 </div>
                 <div className="card-action">
                     {this.actions()}
+
                 </div>
             </div>
         )
