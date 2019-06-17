@@ -5,6 +5,7 @@ import * as tinymce from 'tinymce';
 import 'tinymce/themes/silver';
 import * as M from 'materialize-css';
 import Comment from './comment';
+import { timingSafeEqual } from 'crypto';
 
 interface IState {
     id: number,
@@ -36,7 +37,7 @@ interface IProps {
 class Post extends React.Component<IProps, IState> {
     moreBtn: React.RefObject<HTMLAnchorElement>;
 
-
+    commentsCache: [];
     constructor(props: Readonly<IProps>) {
         super(props);
         this.state = {
@@ -53,7 +54,11 @@ class Post extends React.Component<IProps, IState> {
                 title: "",
             }
         };
+
+        this.commentsCache = null;
     }
+
+
 
     componentDidMount = () => {
 
@@ -71,6 +76,14 @@ class Post extends React.Component<IProps, IState> {
             skin_url: '/lib/tinymce/skins/ui/oxide',
         })
 
+    }
+
+    updateCommentCache = (comments) => {
+        this.commentsCache = comments;
+    }
+
+    getCommentCache = () => {
+        return this.commentsCache;
     }
 
     convertToReadableDate(unix_timestamp: number): string {
@@ -211,7 +224,7 @@ class Post extends React.Component<IProps, IState> {
     commentForm = () => {
         if (this.state.commentFormEnabled) {
             return (
-                <Comment post_id={this.props.id} />
+                <Comment post_id={this.props.id} updateCache={this.updateCommentCache} getCache={this.getCommentCache} />
             )
         } else {
             return (null);

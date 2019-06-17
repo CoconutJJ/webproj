@@ -1,11 +1,13 @@
 import HTTPRequest from './class.HTTPRequest';
 import { HTTP } from '../class.definitions';
+import { func } from 'prop-types';
 
 class Account {
 
     private static MIN_USERNAME_LEN = 3;
     private static MIN_PASSWORD_LEN = 8;
 
+    private static cache = {};
 
 
 
@@ -77,13 +79,15 @@ class Account {
         }
 
     }
-
+    
 
     public static getSessionInfo() {
 
         let req = new HTTPRequest("GET", '/qa/login/info');
 
-        return req.execVoid(HTTP.RESPONSE.OK);
+        return req.execVoid(HTTP.RESPONSE.OK).then(function () {
+
+        });
 
     }
 
