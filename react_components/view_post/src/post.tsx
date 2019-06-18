@@ -1,6 +1,6 @@
 import * as React from 'react';
 import HTTPRequest from '../../../classes/frontend/class.HTTPRequest';
-import { HTTP } from '../../../classes/class.definitions';
+import { HTTP } from '../../../classes/definitions/HTTP';
 import * as tinymce from 'tinymce';
 import 'tinymce/themes/silver';
 import * as M from 'materialize-css';

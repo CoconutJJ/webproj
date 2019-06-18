@@ -2,7 +2,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from '../../interfaces/interface.db'
 import * as db from './class.db'
 import PermissionManager from './class.PermissionManager';
-import { Permissions } from '../class.definitions'
+import { UserPermissions } from '../definitions/UserPermissions'
 
 
 export class Login {
@@ -21,7 +21,7 @@ export class Login {
         [username]);
       if (rows.length == 1) {
 
-        let hasPermission = await PermissionManager.hasPermission(rows[0]['id'], Permissions.Account.login);
+        let hasPermission = await PermissionManager.hasPermission(rows[0]['id'], UserPermissions.Account.login);
 
         return hasPermission && this._verifyPassword(password, rows[0].password);
       } else {

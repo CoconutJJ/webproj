@@ -10,3 +10,4 @@ classes/*.js
 classes/frontend/*.js
 classes/backend/*.js
 new.sql
+classes/definitions/*.js

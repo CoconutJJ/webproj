@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { HTTP } from '../../../classes/class.definitions';
+import { HTTP } from '../../../classes/definitions/HTTP';
 import HTTPRequest from '../../../classes/frontend/class.HTTPRequest';
 import CommentStrip from './comment_strip';
 interface IProps {

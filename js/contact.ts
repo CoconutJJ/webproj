@@ -1,6 +1,6 @@
 import HTTPRequest from '../classes/frontend/class.HTTPRequest';
 import DataSanityCheck from '../classes/frontend/class.DataSanityCheck';
-import { HTTP } from '../classes/class.definitions';
+import { HTTP } from '../classes/definitions/HTTP';
 
 document.addEventListener('DOMContentLoaded', function () {
   let send_btn: HTMLInputElement =

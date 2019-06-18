@@ -1,6 +1,6 @@
 import * as React from "react";
 import HTTPRequest from "../../../classes/frontend/class.HTTPRequest";
-import { HTTP } from "../../../classes/class.definitions";
+import { HTTP } from "../../../classes/definitions/HTTP";
 import Post from "./post";
 
 interface IProps {

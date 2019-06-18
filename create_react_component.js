@@ -32,7 +32,7 @@ function createBuildScript(COMPONENT_NAME) {
         console.log("\t npm run react:build:" + COMPONENT_NAME);
 
         fs.writeFileSync(PACKAGE_JSON_FILEPATH, JSON.stringify(pkg));
-
+        
 
     } else {
 
