@@ -1,10 +1,12 @@
 import * as express from 'express';
 import { Login } from '../classes/backend/class.Login';
 import * as auth from './auth';
-import { HTTP, Permissions } from '../classes/class.definitions';
+import { HTTP } from '../classes/definitions/HTTP';
+import { UserPermissions } from '../classes/definitions/UserPermissions'
 import { Posts } from '../classes/backend/class.Posts';
 import { PostsModel } from '../interfaces/interface.db';
 import { db } from '../classes/backend/class.db';
+import '../classes/class.definitions'
 
 
 const app = express.Router();
@@ -40,7 +42,6 @@ app.get('/posts/:id(\\d+)?', function (req, res) {
         })
 
     }
-
 });
 
 app.get('/posts/view', function (req, res) {
@@ -50,7 +51,7 @@ app.get('/posts/view', function (req, res) {
 })
 
 app.post('/posts', function (req, res) {
-    if (req.ContextUser.hasPermission(Permissions.Posts.owner.create)) {
+    if (req.ContextUser.hasPermission(UserPermissions.Posts.owner.create)) {
         var post = Posts.createPost({
             title: req.body['title'],
             author: req.ContextUser.id(),
@@ -81,7 +82,7 @@ app.post('/posts', function (req, res) {
 app.patch('/posts/:id(\\d+)', function (req, res) {
 
     // check they potentially have edit permissions for this post
-    if (!req.ContextUser.hasPermission(Permissions.Posts.owner.edit) && !req.ContextUser.hasPermission(Permissions.Posts.admin.edit)) {
+    if (!req.ContextUser.hasPermission(UserPermissions.Posts.owner.edit) && !req.ContextUser.hasPermission(UserPermissions.Posts.admin.edit)) {
         res.send(HTTP.RESPONSE.UNAUTHORIZED).send(JSON.stringify({
             code: "EPERM",
             msg: "You are not authorized to perform that action"
@@ -188,7 +189,7 @@ app.post('/posts/comments', function (req, res) {
 app.delete('/posts/comments/:id(\\d+)', function (req, res) {
 
     let dbh = new db();
-    
+
     dbh.query(
         "DELETE FROM comments WHERE id = ?",
         [req.params['id']]

@@ -1,6 +1,6 @@
 import HTTPRequest from './class.HTTPRequest';
-import { HTTP } from '../class.definitions';
-import { func } from 'prop-types';
+import { HTTP } from '../definitions/HTTP';
+
 
 class Account {
 

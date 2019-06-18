@@ -1,4 +1,4 @@
-import {HTTP, HTTP_METHOD} from '../class.definitions';
+import {HTTP, HTTP_METHOD} from '../definitions/HTTP';
 
 
 class HTTPRequest<T=object> {

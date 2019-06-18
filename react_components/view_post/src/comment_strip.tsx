@@ -116,7 +116,7 @@ class CommentStrip extends React.Component<IProps, IState> {
                     <a href="#!" className="blue-text" onClick={this.handleCancelEdit}>Cancel</a>
                 </div>
             </div>
-        )
+        );
 
     }
 

@@ -7,6 +7,7 @@ import * as mysql_store from 'express-mysql-session';
 import * as fs from 'fs';
 import * as bodyparser from 'body-parser'
 import { CurrentUser } from '../classes/backend/class.CurrentUser';
+import '../classes/class.definitions'
 import * as compress from 'compression';
 const app: express.Application = express();
 
@@ -39,15 +40,9 @@ app.use(bodyparser.urlencoded({
 
 app.use(bodyparser.json());
 
-// app.get('*', function(req, res, next){
-//   req.session.loggedIn = false;
-//   next();
-// });
-
-
 app.use(function (req, res, next) {
 
-
+  
   req.ContextUser = new CurrentUser(req.session);
 
   app.locals = {
