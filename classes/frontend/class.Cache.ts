@@ -28,4 +28,9 @@ class StoreCache {
     }
 
     
+    public getCache(name: string) {
+        
+        return JSON.parse(this.sessionStore.getItem(name));
+    }
+
 }

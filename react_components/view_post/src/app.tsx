@@ -14,12 +14,16 @@ interface IState {
 
 class App extends React.Component<IProps, IState> {
 
+    postCount: number;
+
     constructor(props: Readonly<IProps>) {
         super(props);
         this.state = {
             posts: []
-
+            
         }
+
+        this.postCount = 0;
 
         var req = new HTTPRequest("GET", "/qa/posts")
 
@@ -28,7 +32,7 @@ class App extends React.Component<IProps, IState> {
             var posts = [];
 
             data.forEach(function (entry, index) {
-
+                this.postCount++;
                 posts.push(
                     <Post
                         id={entry['id']}
@@ -43,8 +47,10 @@ class App extends React.Component<IProps, IState> {
                 )
             }.bind(this))
 
+            this.setState({
+                posts: posts
+            }, this.updatePosts)
 
-            this.updatePosts(posts)
 
         }.bind(this))
     }
@@ -53,9 +59,10 @@ class App extends React.Component<IProps, IState> {
 
     }
 
-    updatePosts = (posts: Array<any>) => {
+    updatePosts = () => {
 
-        if (posts.length == 0) {
+        if (this.postCount == 0) {
+            var posts = [];
             posts.push(
                 <div className="card" key={1}>
                     <div className="card-content">
@@ -63,21 +70,18 @@ class App extends React.Component<IProps, IState> {
                     </div>
                 </div>
             )
+
+            this.setState({
+                posts: posts
+            })
         }
-
-        this.setState({
-            posts: posts
-        })
-
 
     }
 
     deleteComponent = (key: number) => {
-        let posts = this.state.posts.filter(function (value, index) {
-            return index != key;
-        })
+        this.postCount--;
 
-        this.updatePosts(posts);
+        this.updatePosts();
     }
 
     render(): React.ReactNode {

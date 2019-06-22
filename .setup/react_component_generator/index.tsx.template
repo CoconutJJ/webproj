@@ -8,4 +8,4 @@ import * as ReactDOM from 'react-dom';
  * @description <App description>
  */
 var appContainer = document.getElementById('DOM CONTAINER ID HERE');
-ReactDOM.render(<App.App />, appContainer);
+ReactDOM.render(<App.default />, appContainer);

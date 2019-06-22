@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 
+
 const PACKAGE_JSON_FILEPATH = './package.json'
 
 
@@ -26,18 +27,26 @@ function createBuildScript(COMPONENT_NAME) {
 
     if (typeof pkg["scripts"]["react:build:" + COMPONENT_NAME] === 'undefined') {
 
+        console.log("Generating starter files in react_components/" + COMPONENT_NAME);
+        
+        fs.mkdirSync("react_components/" + COMPONENT_NAME);
+        fs.mkdirSync("react_components/" + COMPONENT_NAME + "/src");
+        fs.mkdirSync("react_components/" + COMPONENT_NAME + "/build");
+
+        fs.copyFileSync(".setup/react_component_generator/app.tsx.template", "react_components/" + COMPONENT_NAME + "/src/app.tsx");
+
+        fs.copyFileSync(".setup/react_component_generator/index.tsx.template", "react_components/" + COMPONENT_NAME + "/src/index.tsx");
+
         pkg["scripts"]["react:build:" + COMPONENT_NAME] = generateBuildCommand(COMPONENT_NAME);
+        
         console.log("Generated build command!")
         console.log("You may build your component with:")
         console.log("\t npm run react:build:" + COMPONENT_NAME);
 
         fs.writeFileSync(PACKAGE_JSON_FILEPATH, JSON.stringify(pkg));
-        
-
+    
     } else {
-
         console.error("error: A component with this name already exists");
-
     }
 }
 
@@ -50,10 +59,10 @@ function removeBuildScript(COMPONENT_NAME) {
 
     if (typeof pkg["scripts"]["react:build:" + COMPONENT_NAME] !== 'undefined') {
         delete pkg["scripts"]["react:build:" + COMPONENT_NAME];
-
+        
         fs.writeFileSync(PACKAGE_JSON_FILEPATH, JSON.stringify(pkg))
         
-        console.log("Build script for " + COMPONENT_NAME + " has been deleted");
+        console.log("Build script for " + COMPONENT_NAME + " has been deleted. You must delete the source files yourself.");
 
     } else {
         console.error("error: Cannot remove " + COMPONENT_NAME + ". No such component exists.");

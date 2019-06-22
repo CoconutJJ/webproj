@@ -1,11 +1,10 @@
+import * as M from 'materialize-css';
 import * as React from 'react';
-import HTTPRequest from '../../../classes/frontend/class.HTTPRequest';
-import { HTTP } from '../../../classes/definitions/HTTP';
 import * as tinymce from 'tinymce';
 import 'tinymce/themes/silver';
-import * as M from 'materialize-css';
+import { HTTP } from '../../../classes/definitions/HTTP';
+import HTTPRequest from '../../../classes/frontend/class.HTTPRequest';
 import Comment from './comment';
-import { timingSafeEqual } from 'crypto';
 
 interface IState {
     id: number,
@@ -35,26 +34,37 @@ interface IProps {
 
 
 class Post extends React.Component<IProps, IState> {
+    
     moreBtn: React.RefObject<HTMLAnchorElement>;
-
     commentsCache: [];
+    
     constructor(props: Readonly<IProps>) {
         super(props);
         this.state = {
+            // post information
             id: -1,
             title: "",
             body: "",
             author: "",
             date: "",
+
+            // Show the date posted
             showDate: true,
+
+            // Edit Post Form
             editEnabled: false,
+
+            // Show an indeterminate progress bar to indicate progress
             showProgressBar: false,
+
+            // Display Comments and textarea to add new comments
             commentFormEnabled: false,
+            
+            // The current updated title if user decides to edit the title
             edit: {
                 title: "",
             }
         };
-
         this.commentsCache = null;
     }
 
@@ -276,7 +286,6 @@ class Post extends React.Component<IProps, IState> {
                 </div>
             </div>
         )
-
     }
 
     render(): React.ReactNode {
