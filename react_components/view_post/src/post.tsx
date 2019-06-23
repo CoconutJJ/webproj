@@ -34,10 +34,10 @@ interface IProps {
 
 
 class Post extends React.Component<IProps, IState> {
-    
+
     moreBtn: React.RefObject<HTMLAnchorElement>;
     commentsCache: [];
-    
+
     constructor(props: Readonly<IProps>) {
         super(props);
         this.state = {
@@ -59,7 +59,7 @@ class Post extends React.Component<IProps, IState> {
 
             // Display Comments and textarea to add new comments
             commentFormEnabled: false,
-            
+
             // The current updated title if user decides to edit the title
             edit: {
                 title: "",
@@ -81,9 +81,22 @@ class Post extends React.Component<IProps, IState> {
             showDate: !!this.props['showDate'],
 
         })
+        //@ts-ignore
+        tinymce.baseURL = "/lib/tinymce"
+
         tinymce.init({
+            relative_urls: true,
             selector: "#edit_body_" + this.props['id'],
             skin_url: '/lib/tinymce/skins/ui/oxide',
+            plugins: [
+                'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
+                'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+                'save table contextmenu directionality emoticons template paste textcolor'
+            ],
+            toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor',
+            branding: false
+
+
         })
 
     }

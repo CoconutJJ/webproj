@@ -5,6 +5,18 @@ import '../../classes/class.definitions';
 
 const app = express.Router();
 
+app.use(function (req, res, next) {
+    if (!req.ContextUser.isLoggedIn()) {
+        if (!req.xhr) {
+            res.status(HTTP.RESPONSE.UNAUTHORIZED).send();
+        } else {
+            res.redirect('/qa/login');
+        }
+    } else {
+        next();
+    }
+})
+
 app.post('/', function (req, res) {
     let dbh = new db();
     let timestamp = Math.floor(Date.now() / 1000);

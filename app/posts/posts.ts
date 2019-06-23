@@ -6,67 +6,79 @@ import { PostsModel } from '../../interfaces/interface.db';
 import * as comments from './comments';
 import { db } from '../../classes/backend/class.db';
 import '../../classes/class.definitions';
-
+import sanitize from 'sanitize-html';
 const app = express.Router();
 
 app.use('/comments', comments);
 
 app.use(function (req, res, next) {
+    
+    if (!req.ContextUser.isLoggedIn()) {
+        if (req.xhr) {
+            res.status(HTTP.RESPONSE.UNAUTHORIZED).send();
+        } else {
+            res.redirect("/qa/login");
+        }
+    } else {
 
-    switch (req.method) {
+        switch (req.method) {
 
-        case "GET":
-            next();
-
-            break;
-
-        case "POST":
-            if (!req.ContextUser.hasPermission(UserPermissions.Posts.admin.create) && !req.ContextUser.hasPermission(UserPermissions.Posts.owner.create)) {
-                res.status(HTTP.RESPONSE.UNAUTHORIZED).send(JSON.stringify({
-                    code: "EPERM",
-                    msg: "You are not authorized to perform this action"
-                }))
-            } else {
+            case "GET":
                 next();
-            }
-            break;
+                break;
 
-        case "PATCH":
-            if (!req.ContextUser.hasPermission(UserPermissions.Posts.admin.edit) && !req.ContextUser.hasPermission(UserPermissions.Posts.owner.edit)) {
-                res.status(HTTP.RESPONSE.UNAUTHORIZED).send(JSON.stringify({
-                    code: "EPERM",
-                    msg: "You are not authorized to perform this action"
-                }))
-            } else {
+            case "POST":
+                if (!req.ContextUser.hasPermission(UserPermissions.Posts.admin.create) && !req.ContextUser.hasPermission(UserPermissions.Posts.owner.create)) {
+                    res.status(HTTP.RESPONSE.UNAUTHORIZED).send(JSON.stringify({
+                        code: "EPERM",
+                        msg: "You are not authorized to perform this action"
+                    }))
+                } else {
+                    next();
+                }
+                break;
+
+            case "PATCH":
+                if (!req.ContextUser.hasPermission(UserPermissions.Posts.admin.edit) && !req.ContextUser.hasPermission(UserPermissions.Posts.owner.edit)) {
+                    res.status(HTTP.RESPONSE.UNAUTHORIZED).send(JSON.stringify({
+                        code: "EPERM",
+                        msg: "You are not authorized to perform this action"
+                    }))
+                } else {
+                    next();
+                }
+                break;
+
+            case "DELETE":
+                if (!req.ContextUser.hasPermission(UserPermissions.Posts.admin.delete) && !req.ContextUser.hasPermission(UserPermissions.Posts.owner.delete)) {
+                    res.status(HTTP.RESPONSE.UNAUTHORIZED).send(JSON.stringify({
+                        code: "EPERM",
+                        msg: "You are not authorized to perform this action"
+                    }))
+                } else {
+                    next();
+                }
+                break;
+
+            default:
                 next();
-            }
-            break;
+                break;
+        }
 
-        case "DELETE":
-            if (!req.ContextUser.hasPermission(UserPermissions.Posts.admin.delete) && !req.ContextUser.hasPermission(UserPermissions.Posts.owner.delete)) {
-                res.status(HTTP.RESPONSE.UNAUTHORIZED).send(JSON.stringify({
-                    code: "EPERM",
-                    msg: "You are not authorized to perform this action"
-                }))
-            } else {
-                next();
-            }
-            break;
-
-        default:
-            next();
-            break;
     }
-
-
 
 })
 
 app.post('/', function (req, res) {
+
+    let sanitized_title = sanitize(req.body['title']);
+    let sanitized_body = sanitize(req.body['body']);
+
+
     var post = Posts.createPost({
-        title: req.body['title'],
+        title: sanitized_title,
         author: req.ContextUser.id(),
-        body: req.body['body'],
+        body: sanitized_body,
         showAuthor: req.body['showAuthor'],
         showDate: req.body['showDate']
     }).then(function () {
@@ -86,23 +98,21 @@ app.post('/', function (req, res) {
 })
 
 app.get('/:id(\\d+)?', function (req, res) {
-    if (!req.ContextUser.isLoggedIn()) {
-        res.redirect('/qa/login');
-    } else {
-        Posts.getColumns(["id", "title", "body", "created_at", "showDate", "author"]).then(function (posts) {
 
-            var allPosts = [];
-            for (let i = 0; i < posts.length; i++) {
+    Posts.getColumns(["id", "title", "body", "created_at", "showDate", "author"]).then(function (posts) {
 
-                var curr: PostsModel = posts[i].getModel();
+        var allPosts = [];
+        for (let i = 0; i < posts.length; i++) {
 
-                allPosts.push(curr);
-            }
+            var curr: PostsModel = posts[i].getModel();
 
-            res.status(HTTP.RESPONSE.OK).send(JSON.stringify(allPosts))
-        })
+            allPosts.push(curr);
+        }
 
-    }
+        res.status(HTTP.RESPONSE.OK).send(JSON.stringify(allPosts))
+    })
+
+
 });
 
 app.get('/view', function (req, res) {
@@ -163,11 +173,9 @@ app.delete('/:id(\\d+)', function (req, res) {
 
 app.get('/create', function (req, res) {
 
-    if (req.ContextUser.isLoggedIn()) {
-        res.render('../pages/qa/qa_create_post.ejs', { title: 'Create Post' });
-    } else {
-        res.redirect('/qa/login');
-    }
+
+    res.render('../pages/qa/qa_create_post.ejs', { title: 'Create Post' });
+
 })
 
 

@@ -15,14 +15,14 @@ interface IState {
 
 
 class Comment extends React.Component<IProps, IState> {
-  key: number;
+
+  private key: number;
 
   constructor(props: Readonly<IProps>) {
     super(props)
     this.state = {
       comments: [],
       currentComment: "",
-
     }
     this.key = 0;
 
@@ -46,9 +46,6 @@ class Comment extends React.Component<IProps, IState> {
             comment['comment']
           )
         });
-
-
-
       }.bind(this))
     } else {
       this.setState({
@@ -128,7 +125,6 @@ class Comment extends React.Component<IProps, IState> {
   }
 
   render(): React.ReactNode {
-
     return (
       <div className="">
         {this.state.comments}
@@ -144,7 +140,6 @@ class Comment extends React.Component<IProps, IState> {
 
       </div>
     )
-
   }
 
 

@@ -15,7 +15,7 @@ export class db implements DatabaseConnectionManager {
 
 
   constructor() {
-  
+    
     if (!db.sql) {
       db.sql = mysql.createPool({
         host: 'localhost',
