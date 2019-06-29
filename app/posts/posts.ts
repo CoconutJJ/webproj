@@ -6,13 +6,18 @@ import { PostsModel } from '../../interfaces/interface.db';
 import * as comments from './comments';
 import { db } from '../../classes/backend/class.db';
 import '../../classes/class.definitions';
-import sanitize from 'sanitize-html';
+import { IncomingForm, Files, Fields } from 'formidable';
+
 const app = express.Router();
 
 app.use('/comments', comments);
 
 app.use(function (req, res, next) {
-    
+
+    // var form = new IncomingForm();
+    // form.parse(req, function (err, fields: Fields, files: Files) {
+    //     files['ce'].
+    // });
     if (!req.ContextUser.isLoggedIn()) {
         if (req.xhr) {
             res.status(HTTP.RESPONSE.UNAUTHORIZED).send();
@@ -71,30 +76,31 @@ app.use(function (req, res, next) {
 
 app.post('/', function (req, res) {
 
-    let sanitized_title = sanitize(req.body['title']);
-    let sanitized_body = sanitize(req.body['body']);
+    if (req.ContextUser.validateCSRF()) {
 
 
-    var post = Posts.createPost({
-        title: sanitized_title,
-        author: req.ContextUser.id(),
-        body: sanitized_body,
-        showAuthor: req.body['showAuthor'],
-        showDate: req.body['showDate']
-    }).then(function () {
+        var post = Posts.createPost({
+            title: req.body['title'],
+            author: req.ContextUser.id(),
+            body: req.body['body'],
+            showAuthor: req.body['showAuthor'],
+            showDate: req.body['showDate']
+        }).then(function () {
 
-        res.status(HTTP.RESPONSE.ACCEPTED).send(JSON.stringify({
-            code: "OK",
-            msg: "Post successfully created"
-        }))
+            res.status(HTTP.RESPONSE.ACCEPTED).send(JSON.stringify({
+                code: "OK",
+                msg: "Post successfully created"
+            }))
 
-    }).catch(function (err) {
-        res.status(HTTP.RESPONSE.INTERNAL_SERVER_ERROR).send(JSON.stringify({
-            code: "ERR",
-            msg: err.toString()
-        }))
-    })
-
+        }).catch(function (err) {
+            res.status(HTTP.RESPONSE.INTERNAL_SERVER_ERROR).send(JSON.stringify({
+                code: "ERR",
+                msg: err.toString()
+            }))
+        })
+    } else {
+        
+    }
 })
 
 app.get('/:id(\\d+)?', function (req, res) {

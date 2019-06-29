@@ -1,8 +1,8 @@
-import {HTTP, HTTP_METHOD} from '../definitions/HTTP';
+import { HTTP, HTTP_METHOD } from '../definitions/HTTP';
 
 
-class HTTPRequest<T=object> {
-    
+class HTTPRequest<T = object> {
+
 
     private xhttp: XMLHttpRequest;
     private url: string;
@@ -45,42 +45,25 @@ class HTTPRequest<T=object> {
      * @param DATA payload
      * @param requireStatus
      */
-    private exec(DATA?: string, requireStatus?: number): Promise<T> {
+    private exec(DATA?: string | FormData, requireStatus?: number): Promise<T> {
         let req = this.xhttp;
         let method = this.method;
         let url = this.url;
         return new Promise(function (resolve, reject) {
 
+        
+            let csrf_meta: HTMLMetaElement = document.querySelector('meta[name=CSRF]');
 
             req.onreadystatechange = function () {
 
-/*                 if (req.readyState == XMLHttpRequest.DONE) {
+                if (req.readyState == XMLHttpRequest.DONE) {
+                    if (req.getResponseHeader('CSRF-Token')) {
+                        let csrf_meta: HTMLMetaElement = document.querySelector('meta[name=CSRF]');
 
-                    // get request must
-                    if (method.toUpperCase() === "GET") {
+                        csrf_meta.content = req.getResponseHeader('CSRF-Token');
 
-                        let token = this.getResponseHeader('CSRF-Token');
-
-                        if (token !== null) {
-                            // update token
-                            window['_token'] = token;
-
-                            let csrf_metaTag: HTMLMetaElement = document.querySelector("meta[name='CSRF']");
-
-                            if (csrf_metaTag == null) {
-                                csrf_metaTag = document.createElement('meta');
-                                csrf_metaTag.name = "CSRF";
-                                document.head.appendChild(csrf_metaTag);
-                            }
-                            csrf_metaTag.content = token;
-                        } else {
-                            console.error("CSRF: No token was provided from GET " + url);
-                        }
                     }
-
-
-
-                } */
+                }
 
                 // check if the AJAX is done and the correct HTTP Response 
                 // status is returned
@@ -88,7 +71,7 @@ class HTTPRequest<T=object> {
                     req.status ==
                     ((requireStatus == null) ? HTTP.RESPONSE.OK :
                         requireStatus)) {
-                    
+
                     resolve(JSON.parse(req.responseText));
 
 
@@ -107,14 +90,14 @@ class HTTPRequest<T=object> {
             };
 
             try {
-                this.setHeader('CSRF-Token', window['_token']);
+                this.setHeader('CSRF-Token', csrf_meta.content);
                 req.send(DATA);
             } catch (e) { }
 
         }.bind(this))
     }
 
-    
+
     public execVoid(requireStatus?: number): Promise<T> {
         this.xhttp.open(this.method, this.url);
         return this.exec(null, requireStatus);
@@ -125,17 +108,11 @@ class HTTPRequest<T=object> {
      * @param DATA JSON payload
      */
     public execAsQuery(DATA: object, requireStatus?: number): Promise<T> {
-        
+
         this.xhttp.open(this.method, this.url);
-        
+
         this.setHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-        // collect browser data for potential usage.
-        DATA['analytics'] = btoa(JSON.stringify({
-            'creation_time': Date.now(),
-            'cookies_enabled': navigator.cookieEnabled,
-            'native_os': navigator.platform,
-        }));
 
         return this.exec(this.toQueryString(DATA), requireStatus);
     }
@@ -147,12 +124,28 @@ class HTTPRequest<T=object> {
     public execAsJSON(DATA: object, requireStatus?: number): Promise<T> {
         this.xhttp.open(this.method, this.url);
         this.setHeader('Content-Type', 'application/json')
-        DATA['analytics'] = {
-            'creation_time': Date.now(),
-            'cookies_enabled': navigator.cookieEnabled,
-            'native_os': navigator.platform,
-        };
+
         return this.exec(JSON.stringify(DATA), requireStatus);
+    }
+
+    public execAsFormData(DATA: { [key: string]: string | Blob }, FILES: { [key: string]: [File, (ev: ProgressEvent) => void] }, requireStatus?: number) {
+
+        var formdata = new FormData();
+
+        for (let key in DATA) {
+            formdata.append(key, DATA[key])
+        }
+
+        for (let f in FILES) {
+            formdata.append(f, FILES[f][0]);
+        }
+
+
+        this.xhttp.open(this.method, this.url);
+
+        this.setHeader('Content-Type', 'multipart/form-data');
+
+        return this.exec(formdata, requireStatus)
     }
 }
 

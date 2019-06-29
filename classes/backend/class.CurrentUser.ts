@@ -1,9 +1,16 @@
+import * as express from 'express';
+import * as crypto from 'crypto';
 export class CurrentUser {
 
     private sess: Express.Session;
-
-    constructor(session: Express.Session) {
-        this.sess = session;
+    private req: express.Request;
+    private res: express.Response
+    private next: express.NextFunction
+    constructor(req: express.Request, res: express.Response, next: express.NextFunction) {
+        this.sess = req.session;
+        this.req = req;
+        this.res = res;
+        this.next = next;
     }
 
     public id() {
@@ -45,6 +52,25 @@ export class CurrentUser {
 
     }
 
+    public generateCSRFToken() {
+        if (this.sess['xsrf'] == null) {
+            this.regenerateCSRFToken();
+        }
+    }
+
+    private regenerateCSRFToken() {
+        this.sess['xsrf'] = crypto.randomBytes(256).toString('hex');
+        this.res.setHeader('CSRF-Token', this.sess['xsrf']);
+    }
+
+    public validateCSRF() {
+        let is_valid = this.sess['xsrf'] === this.req.headers['CSRF-Token'];
+
+        this.regenerateCSRFToken();
+
+        return is_valid;
+    }
+
     public hasPermissionToken(permissionToken: string) {
         return this.sess['user']['permissions'].indexOf(permissionToken) !== -1;
     }
@@ -66,6 +92,4 @@ export class CurrentUser {
             return add_tokens.indexOf(token) !== -1;
         });
     }
-
-
 }

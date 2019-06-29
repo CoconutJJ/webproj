@@ -6,6 +6,5 @@ declare global {
         interface Request {
             ContextUser: CurrentUser;
         }
-
     }
 }

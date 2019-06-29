@@ -9,6 +9,7 @@ import * as bodyparser from 'body-parser'
 import { CurrentUser } from '../classes/backend/class.CurrentUser';
 import '../classes/class.definitions'
 import * as compress from 'compression';
+import * as morgan from 'morgan';
 const app: express.Application = express();
 
 var mysqlstore = new mysql_store({
@@ -22,6 +23,8 @@ var mysqlstore = new mysql_store({
 var SECRET = fs.readFileSync(__dirname + '/../../SESSION_SECRET', { encoding: 'UTF-8' }).toString().replace('\n', '');
 
 app.set('view engine', 'ejs');
+
+app.use(morgan('dev'))
 
 app.use(compress());
 
@@ -42,15 +45,15 @@ app.use(bodyparser.json());
 
 app.use(function (req, res, next) {
 
-  
-  req.ContextUser = new CurrentUser(req.session);
-
+  req.ContextUser = new CurrentUser(req, res, next);
+  req.ContextUser.generateCSRFToken();
   app.locals = {
 
     site: {
       loggedIn: req.ContextUser.isLoggedIn(),
       user: req.session['user'],
-      env: app.get('env')
+      env: app.get('env'),
+      csrf: req.session['xsrf']
     },
 
   };
@@ -63,16 +66,13 @@ app.use('/qa', qa);
 
 app.use('/form', form);
 
-/**
-  All React Component assets are mounted on this static route.
-*/
 app.use('/react_assets', express.static('react_components'));
 
 app.get('/', function (req, res) {
   res.render('../pages/index.ejs');
 });
 
-app.get('/about', function (req, res) {
+app.get('/about', function (req, res) {  
   res.render('../pages/about.ejs');
 });
 
@@ -97,6 +97,8 @@ app.use('/css', express.static('build/css'));
 app.use('/js', express.static('build/js'));
 
 app.use('/lib', express.static('lib'));
+
+app.use('/assets', express.static('assets'));
 
 app.use(function (req, res, next) {
   res.redirect('/404');

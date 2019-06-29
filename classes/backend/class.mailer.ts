@@ -15,6 +15,9 @@ class Mailer {
                 pass:"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"
             }
         });
+        trans.sendMail({
+            
+        })
 
     }
 
