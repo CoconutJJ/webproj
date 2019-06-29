@@ -1,17 +1,22 @@
 <html>
-    <head>
-        <%- include('qa_header.ejs') %>
-    </head>
-    <body>
-        <%- include("qa_nav.ejs") %>
-        <div class="container">
-            
-            <h1>Home</h1>
-            <p>
-                
-            </p>
+
+<head>
+    <%- include('qa_header.ejs') %>
+</head>
+
+<body>
+    <%- 
+    include('../nav.ejs') 
+    %>
+    <div class="container">
+
+        <h1>Home</h1>
+        <div id="dashboard"></div>
 
 
-        </div>
-    </body>
+    </div>
+    <script src="/react_assets/dashboard/build/index.js"></script>
+
+</body>
+
 </html>
