@@ -1,0 +1,143 @@
+commit 45664d3ab5bb4228069ab3bd804518ec3b9da7ae
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sun Jun 23 02:16:26 2019 -0400
+
+    Refactored login validation for posts and comments. Also
+    added link plugin to tinymce
+
+commit 1babdb36a5404656de84b81c05e6c906d2c4e637
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sat Jun 22 18:23:17 2019 -0400
+
+    remove create_react_component.sh and moved functionality to
+    create_react_component.js
+
+commit 4f475c6a8ab3d2a0c3c9fbe60165ca3e1d141e13
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Tue Jun 18 04:15:43 2019 -0400
+
+    Seperated HTTP definitions, UserPermissions, Express globals into
+    different files
+
+commit e5372bac6a18ed18fe035be7e541abe66cc7c868
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Mon Jun 17 05:49:12 2019 -0400
+
+    implemented ability to update comments inline
+
+commit 92980b1b37d66fe0319dd77825c59af44b332b85
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sun Jun 16 05:51:16 2019 -0400
+
+    Created comments view component and integrated into each post
+
+commit 826a8799646292806da958a66de9314273f229d9
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sun Jun 16 01:58:31 2019 -0400
+
+    Trying to figure out bug with posts not calling the correct handler
+
+commit eeee3d77b1fcb8fd921a357a3c8fc2c3bde76767
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sat Jun 15 02:16:07 2019 -0400
+
+    removed js files from backend
+
+commit 9b48efd534b726cfce9608ffba72dc653ca1a2ad
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sat Jun 15 01:55:40 2019 -0400
+
+    Added permission manager, jquery, and new view database page
+
+commit f637402eaabc7ba037ececc8e43e9536d5b10d9f
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sat Jun 15 01:01:09 2019 -0400
+
+    created permissions management system and improved sessions current user type
+
+commit 4d45592a86350b8f75f773bc9b8461ed0be81c4e
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Thu Jun 13 00:25:53 2019 -0400
+
+    removed content.tsx. no longer needed
+
+commit bad09a21f25634babe8167bb17355b9575466e59
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Thu Jun 13 00:23:38 2019 -0400
+
+    Created form to create, view, edit and delete posts using React.
+    Have not yet tested the update mechanism
+
+commit 10928c5943e7b2672b1b678a42d7d4ed903d9646
+Author: David Yue <dyue@blackberry.com>
+Date:   Tue Jun 11 13:32:58 2019 -0400
+
+    Patched build script to include message when deleting script
+
+commit 18105e94c5c97c7ea99dc54e5ed41505cec5f42f
+Author: David Yue <dyue@blackberry.com>
+Date:   Tue Jun 11 13:28:42 2019 -0400
+
+    created react build script
+
+commit eb5287049cffe113af69799e7964037cb3a5447d
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sun Jun 9 22:30:10 2019 -0400
+
+    Implemented v1 of Controller class to be used for Posts
+
+commit 59bcb8c61ef19517e2dbd45a9a4aca64a00975f2
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sat Jun 8 19:42:01 2019 -0400
+
+    .
+
+commit 6c5254d40e0f5c572da8441731e5ac7acac99824
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sat Jun 8 19:41:10 2019 -0400
+
+    Added TinyMCE editor in qa/posts/create.
+
+commit ef03f39ba6dff937c5020cc0913c675dac9ac89d
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sat Jun 8 02:52:49 2019 -0400
+
+    Changed google-closure-compiler warning level to quiet
+
+commit 07e9d0ad5d08dcf1db9193f3514b40f2487c5c7e
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sat Jun 8 02:29:08 2019 -0400
+
+    Fixed up HTTP status codes. Included global shared status code
+    declaration for readability
+
+commit 1b5e63d744c0e541ef49c0cd3f4931d621fcec0d
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sat Jun 8 00:55:59 2019 -0400
+
+    Implemented Browserify, updated React Components plugin
+
+commit 064be2ffcb4a5f4108a89ba18306356f58eb390d
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Fri Jun 7 04:51:20 2019 -0400
+
+    Integrated first working version of React Component support with
+    Typescript
+
+commit deef5b9d30b7fdcd0363294e96357b50647380f5
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sun May 26 18:13:32 2019 -0400
+
+    Created qa_create_post view, added the controller paths
+
+commit f889a6d708acca45eb7114b019f9814d5a5c101a
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sun May 26 04:43:30 2019 -0400
+
+    Fresh start. Init commit
+
+commit cf6f4acbf9589c7b7c03b1ee178dd73eefad72e2
+Author: David Yue <davidyue5819@gmail.com>
+Date:   Sun May 26 04:38:19 2019 -0400
+
+    Initial commit

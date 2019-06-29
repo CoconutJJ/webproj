@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var http = new HTTPRequest('POST', '/form/contact');
 
-
+    
 
     if (!DataSanityCheck.containsHTMLTags(
       firstname.value, lastname.value, email.value, body.value)) {
@@ -69,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function () {
           error_box.innerText = 'Error. '
           console.error('error: POST /contact results in status: ' + status);
         });
-
     }
   });
 });

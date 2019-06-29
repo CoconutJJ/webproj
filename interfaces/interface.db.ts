@@ -28,7 +28,6 @@ export interface Analytics {
 }
 
 export interface PostsModel {
-
   id: number,
   title: string,
   body: string,
@@ -40,11 +39,7 @@ export interface PostsModel {
 }
 
 export interface XHRResponse<T> {
-
   code: "OK" | "ERR"
   redirect?: string,
   data: T,
-
-
-
 }

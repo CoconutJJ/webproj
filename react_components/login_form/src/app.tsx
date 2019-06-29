@@ -61,7 +61,7 @@ class App extends React.Component {
     handleSubmit = () => {
         this.enableProgressBar();
         Account.login(this.state.username, this.state.password)
-            .then(function (ret) {
+            .then((ret) => {
                 switch (ret['code']) {
                     case 'LOGIN_SUCCESS':
                         this.disableProgressBar();
@@ -69,11 +69,12 @@ class App extends React.Component {
                         window.location.replace(ret['redirect']);
                         break;
                 }
-            }.bind(this))
-            .catch(function (ret) {
+            })
+            .catch((ret) => {
                 this.disableProgressBar();
+                this.disableLoginBtn();
                 M.toast({ html: ret['msg'], classes: 'red' })
-            }.bind(this));
+            });
     }
 
     render(): React.ReactNode {
@@ -88,7 +89,6 @@ class App extends React.Component {
                 </div>
             </form>
         )
-
     }
 
 }

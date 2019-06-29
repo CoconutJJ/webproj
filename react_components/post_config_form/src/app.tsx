@@ -5,56 +5,77 @@ import 'tinymce/themes/silver';
 import { HTTP } from "../../../classes/definitions/HTTP";
 import HTTPRequest from '../../../classes/frontend/class.HTTPRequest';
 
+
+
 class App extends React.Component {
     state = {
         customPostDateEnabled: false,
         showAuthor: true,
         showDate: true,
         title: "",
-        customPostDate: ""
+        customPostDate: "",
+        submitted: false
 
+    }
+    constructor(props) {
+        super(props)
+        
     }
 
     componentDidMount = () => {
         M.AutoInit();
+        //@ts-ignore
+        tinymce.baseURL = "/lib/tinymce"
         // run the tinymce editor
         tinymce.init({
+            relative_urls: true,
             selector: "#post_editor",
             skin_url: '/lib/tinymce/skins/ui/oxide',
-    
+            plugins: [
+                'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
+                'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+                'save table contextmenu directionality emoticons template paste textcolor'
+            ],
+            toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor',
+            branding: false
+
+
         })
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = (e: any) => {
         var req = new HTTPRequest("POST", "/qa/posts");
 
         // bundle up the entire state of the view and body content and send it
         // off. server will filter out the useful info.
         req.execAsJSON({
-            ...this.state, 
+            ...this.state,
             body: tinymce.get('post_editor').getContent()
         }, HTTP.RESPONSE.ACCEPTED).then(function (ret) {
             // redirect if requested by server.
             if (typeof ret['redirect'] !== 'undefined' && ret['redirect'].length > 0) {
-                window.location.replace(ret['redirect']);   
+                window.location.replace(ret['redirect']);
             } else {
-                M.toast({html: ret['msg']});
+                M.toast({ html: ret['msg'] });
+                this.setState({
+                    submitted: true,
+                })
             }
 
-        }).catch (function (ret) {
-            M.toast({html: ret['code'] + ": " + ret['msg'], classes: "red"})
+        }.bind(this)).catch(function (ret) {
+            M.toast({ html: ret['code'] + ": " + ret['msg'], classes: "red" })
         })
 
     }
 
-    handleInputChange = (e) => {
+    handleInputChange = (e: { target: { name: any; value: any; }; }) => {
         this.setState({
             [e.target.name]: e.target.value
         })
     }
 
 
-    handleCheckBoxChange = (e) => {
+    handleCheckBoxChange = (e: { target: { name: string | number; }; }) => {
         this.setState({
             [e.target.name]: !this.state[e.target.name]
         })
@@ -69,59 +90,68 @@ class App extends React.Component {
 
     render(): React.ReactNode {
 
-        return (
-            <div>
+
+        if (this.state.submitted) {
+
+            return (
                 <div>
-                    <h1>Create Post</h1>
-                    <input type="text" placeholder="Title" name="title" style={{width: "75%", fontSize: "18pt"}} onChange={this.handleInputChange} value={this.state.title} />
-                    <br /><br />
-                    <textarea id="post_editor"></textarea><br />
-
-
-                    <button type="button" className="btn waves-effect green" onClick={this.handleSubmit}><i className="material-icons left">arrow_forward</i>Submit</button>
-                    <br /><br />
+                    <h1>Post Submitted!</h1>
+                    <p>
+                        Your post was successfully submitted. You can <a href="/qa/posts/view">view</a> it, edit or delete it.
+                    </p>
                 </div>
-                <div className="row">
-                    <div className="col s12">
-                        <div className="card">
-                            <div className="card-content">
-                                <span className="card-title">Submission Settings</span>
+            );
 
-                                <div className="row">
-                                    <div className="col s6">
-                                        <label>
-                                            <input type="checkbox" name="showAuthor" className="filled-in" checked={this.state.showAuthor}  onChange={this.handleCheckBoxChange}/>
-                                            <span>Show Author Name</span>
-                                        </label>
+        } else {
+            return (
+                <div>
+                    <div>
+                        <h1>Create Post</h1>
+                        <input type="text" placeholder="Title" name="title" style={{ width: "75%", fontSize: "18pt" }} onChange={this.handleInputChange} value={this.state.title} />
+                        <br /><br />
+                        <textarea id="post_editor"></textarea><br />
 
+                        <button type="button" className="btn waves-effect green" onClick={this.handleSubmit}><i className="material-icons left">arrow_forward</i>Submit</button>
+                        <br /><br />
+                    </div>
+                    <div className="row">
+                        <div className="col s12">
+                            <div className="card">
+                                <div className="card-content">
+                                    <span className="card-title">Submission Settings</span>
+
+                                    <div className="row">
+                                        <div className="col s6">
+                                            <label>
+                                                <input type="checkbox" name="showAuthor" className="filled-in" checked={this.state.showAuthor} onChange={this.handleCheckBoxChange} />
+                                                <span>Show Author Name</span>
+                                            </label>
+
+                                        </div>
+                                        <div className="col s6">
+                                            <label>
+                                                <input type="checkbox" name="showDate" className="filled-in" checked={this.state.showDate} onChange={this.handleCheckBoxChange} />
+                                                <span>Show Date</span>
+                                            </label>
+                                        </div>
                                     </div>
-                                    <div className="col s6">
-                                        <label>
-                                            <input type="checkbox" name="showDate" className="filled-in" checked={this.state.showDate} onChange={this.handleCheckBoxChange}/>
-                                            <span>Show Date</span>
-                                        </label>
-                                    </div>
-
-                                </div>
-                                <div className="row">
-                                    <div className="col s6">
-                                        <label>
-                                            <input type="checkbox" className="filled-in" onClick={this.customDateToggle} />
-                                            <span>Custom Post Date</span>
-                                        </label>
-                                        <input type="text" className="datepicker" name="customPostDate" placeholder="New Date" value={this.state.customPostDate} onChange={this.handleInputChange} disabled={!this.state.customPostDateEnabled} />
-
+                                    <div className="row">
+                                        <div className="col s6">
+                                            <label>
+                                                <input type="checkbox" className="filled-in" onClick={this.customDateToggle} />
+                                                <span>Custom Post Date</span>
+                                            </label>
+                                            <input type="text" className="datepicker" name="customPostDate" placeholder="New Date" value={this.state.customPostDate} onChange={this.handleInputChange} disabled={!this.state.customPostDateEnabled} />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        )
-
+            )
+        }
     }
-
 }
 
 export default App;
