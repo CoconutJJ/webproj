@@ -1,5 +1,7 @@
 import * as React from 'react';
-
+import HTTPRequest from '../../../classes/frontend/class.HTTPRequest';
+import * as M from 'materialize-css';
+import { HTTP } from '../../../classes/definitions/HTTP';
 interface IProps {
     commentId: number,
     commentAuthorFirstName: string,
@@ -25,6 +27,7 @@ interface IState {
     deleted: boolean
     editEnabled: boolean,
     editComment: string
+    editCommentUpdateDisabled: boolean
 }
 
 
@@ -37,7 +40,8 @@ class CommentStrip extends React.Component<IProps, IState> {
             changeEnabled: false,
             deleted: false,
             editComment: this.props.commentText,
-            editEnabled: false
+            editEnabled: false,
+            editCommentUpdateDisabled: false
         }
     }
 
@@ -65,7 +69,34 @@ class CommentStrip extends React.Component<IProps, IState> {
     }
 
     handleUpdateComment = () => {
+        // disable the update button while ajax request is processing
+        this.disableUpdateBtn();
+
+        var req = new HTTPRequest("PATCH", "/qa/posts/comments/" + this.state.commentId);
+
+        req.execAsJSON({
         
+            comment: this.state.editComment
+        
+        }, HTTP.RESPONSE.ACCEPTED).then((data) => {
+        
+            if (data['code'] == "OK") {
+                M.toast({ html: data['msg'], classes: "green" });
+                this.setState({
+                    commentText: this.state.editComment
+                });
+                this.disableEdit();
+            } else {
+                M.toast({ html: data['code'] + ": " + data['msg'], classes: "red" })
+            }
+        
+        }).finally(() => {
+            // re-enable to button regardless of outcome.
+            this.enableUpdateBtn();
+        
+        });
+
+
     }
 
     handleCancelEdit = () => {
@@ -87,13 +118,25 @@ class CommentStrip extends React.Component<IProps, IState> {
 
     disableCommentControls = () => {
         this.setState({
-            changeEnabled: false  
+            changeEnabled: false
         })
     }
 
     handleEditChange = (e) => {
         this.setState({
             editComment: e.target.value
+        })
+    }
+
+    disableUpdateBtn = () => {
+        this.setState({
+            editCommentUpdateDisabled: true
+        })
+    }
+
+    enableUpdateBtn = () => {
+        this.setState({
+            editCommentUpdateDisabled: false
         })
     }
 
@@ -112,7 +155,7 @@ class CommentStrip extends React.Component<IProps, IState> {
                     <label htmlFor="commentbox">Comment:</label>
                 </div>
                 <div className="input-field col l2 s12 m12">
-                    <a href="#!" className="green-text" onClick={this.handleUpdateComment}>Submit</a>
+                    <button className="green-text" onClick={this.handleUpdateComment} disabled={this.state.editCommentUpdateDisabled}>Update</button>
                     <a href="#!" className="blue-text" onClick={this.handleCancelEdit}>Cancel</a>
                 </div>
             </div>

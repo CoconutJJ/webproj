@@ -99,7 +99,10 @@ app.post('/', function (req, res) {
             }))
         })
     } else {
-        
+        res.status(HTTP.RESPONSE.UNAUTHORIZED).send(JSON.stringify({
+            code: "ERR",
+            msg: "Invalid Request"
+        }))
     }
 })
 
@@ -122,18 +125,16 @@ app.get('/:id(\\d+)?', function (req, res) {
 });
 
 app.get('/view', function (req, res) {
-
     res.render('../pages/qa/qa_view_post.ejs', { title: 'All Posts' })
-
 })
-
-
+app.get('/create', function (req, res) {
+    res.render('../pages/qa/qa_create_post.ejs', { title: 'Create Post' });
+})
 
 app.patch('/:id(\\d+)', function (req, res) {
 
     Posts.allPosts([{ id: req.params['id'] }]).then(function (posts) {
         if (posts.length == 1) {
-
             return posts[0].updatePost({
                 title: req.body['title'],
                 body: req.body['body']
@@ -159,30 +160,31 @@ app.delete('/:id(\\d+)', function (req, res) {
     Posts.allPosts([{ id: req.params['id'] }]).then(function (posts) {
         if (posts.length == 1) {
             posts[0].delete();
-            res.status(HTTP.RESPONSE.OK).send(JSON.stringify({
-                code: 'OK',
-                msg: 'Post has been successfully deleted'
-            }))
+            res.status(HTTP.RESPONSE.OK).send(
+                JSON.stringify({
+                    code: 'OK',
+                    msg: 'Post has been successfully deleted'
+                })
+            )
         } else {
-            res.status(HTTP.RESPONSE.INTERNAL_SERVER_ERROR).send(JSON.stringify({
-                code: 'ERR',
-                msg: 'An error has occurred. Error Code: 1'
-            }))
+            res.status(HTTP.RESPONSE.INTERNAL_SERVER_ERROR).send(
+                JSON.stringify({
+                    code: 'ERR',
+                    msg: 'An error has occurred. Error Code: 1'
+                })
+            )
         }
     }).catch(function () {
-        res.status(HTTP.RESPONSE.INTERNAL_SERVER_ERROR).send(JSON.stringify({
-            code: 'ERR',
-            msg: 'An error has occurred. Error Code: 2'
-        }))
+        res.status(HTTP.RESPONSE.INTERNAL_SERVER_ERROR).send(
+            JSON.stringify({
+                code: 'ERR',
+                msg: 'An error has occurred. Error Code: 2'
+            })
+        )
     })
 })
 
-app.get('/create', function (req, res) {
 
-
-    res.render('../pages/qa/qa_create_post.ejs', { title: 'Create Post' });
-
-})
 
 
 app.get('/:id(\\d+)/comments', function (req, res) {

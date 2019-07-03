@@ -2,7 +2,7 @@ import * as express from 'express';
 import { db } from '../../classes/backend/class.db';
 import { HTTP } from '../../classes/definitions/HTTP';
 import '../../classes/class.definitions';
-
+import * as mysql from 'mysql'
 const app = express.Router();
 
 app.use(function (req, res, next) {
@@ -15,6 +15,7 @@ app.use(function (req, res, next) {
     } else {
         next();
     }
+
 })
 
 app.post('/', function (req, res) {
@@ -24,7 +25,7 @@ app.post('/', function (req, res) {
         "INSERT INTO comments\
         (comment, author, post, created_at, updated_at)\
         VALUES (?,?,?,?,?)", [req.body['comment'], req.ContextUser.id(), req.body['post'], timestamp, timestamp]
-    ).then(function (rows) { 
+    ).then(function (rows) {
 
         res.status(HTTP.RESPONSE.ACCEPTED).send(JSON.stringify({
             code: "OK",
@@ -41,6 +42,28 @@ app.post('/', function (req, res) {
 
         }))
     })
+})
+
+app.patch('/:id(\\d+)', function (req, res) {
+
+    let dbh = new db();
+
+    dbh.query(
+        "UPDATE comments SET comment = ?, updated_at = ? WHERE id = ?",
+        [req.body["comment"], Math.floor(Date.now() / 1000), req.params["id"]])
+        .then(function (result) {
+
+            // console.log(result);
+
+            res.status(HTTP.RESPONSE.ACCEPTED).send(
+                JSON.stringify({
+                    code: "OK",
+                    msg: "Your comment was updated"
+                })
+            );
+
+        });
+
 })
 
 app.delete('/:id(\\d+)', function (req, res) {

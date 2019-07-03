@@ -7,5 +7,3 @@ describe('test', () => {
     })
 })
 
-
-describe('should create a user')

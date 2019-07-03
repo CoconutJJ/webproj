@@ -64,8 +64,8 @@ export class CurrentUser {
     }
 
     public validateCSRF() {
-        let is_valid = this.sess['xsrf'] === this.req.headers['CSRF-Token'];
-
+        let is_valid = this.sess['xsrf'] === this.req.header('CSRF-Token')
+        console.log("CSRF:" + this.sess['xsrf'] + ", Request CSRF: " + this.req.header('CSRF-Token'));
         this.regenerateCSRFToken();
 
         return is_valid;
